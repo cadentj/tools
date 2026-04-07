@@ -1,4 +1,13 @@
+# Google API credentials
+
 credentials.json
 token.json
 
+# Python
+
 __pycache__/
+
+# JS/TS
+
+node_modules/
+dist/

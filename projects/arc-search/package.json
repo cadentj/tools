@@ -1,0 +1,25 @@
+{
+  "name": "arc-search",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --mode background && vite build --mode content && vite build --mode popup && vite build --watch --mode popup",
+    "build": "vite build --mode background && vite build --mode content && vite build --mode popup",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@leeoniya/ufuzzy": "^1.0.19",
+    "sortablejs": "^1.15.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/chrome": "^0.0.268",
+    "@types/sortablejs": "^1.15.9",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}

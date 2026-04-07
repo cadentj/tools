@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arc Search</title>
+    <link rel="stylesheet" href="./assets/popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1 class="title">Arc Search</h1>
+      <p class="lead">Command bar shortcut and search behavior.</p>
+
+      <label class="field">
+        <span>Hotkey preset</span>
+        <select id="hotkey-preset">
+          <option value="E">⌘/Ctrl + E</option>
+          <option value="K">⌘/Ctrl + K</option>
+          <option value="T">⌘/Ctrl + T (page override on web pages)</option>
+        </select>
+      </label>
+
+      <div class="field">
+        <span>Category priority</span>
+        <ul id="priority-list" class="priority"></ul>
+        <p class="hint">Drag to reorder. Lower items have lower priority.</p>
+      </div>
+
+      <div class="row2">
+        <label class="field">
+          <span>Max / category</span>
+          <input id="max-per" type="number" min="0" max="50" />
+        </label>
+        <label class="field">
+          <span>Max total</span>
+          <input id="max-total" type="number" min="1" max="100" />
+        </label>
+      </div>
+
+      <div class="targets">
+        <span>Open targets</span>
+        <label>
+          Bookmarks
+          <select id="open-bookmark">
+            <option value="new_tab">New tab</option>
+            <option value="current_tab">Current tab</option>
+          </select>
+        </label>
+        <label>
+          History
+          <select id="open-history">
+            <option value="new_tab">New tab</option>
+            <option value="current_tab">Current tab</option>
+          </select>
+        </label>
+        <label>
+          Web search
+          <select id="open-web">
+            <option value="new_tab">New tab</option>
+            <option value="current_tab">Current tab</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="save" type="button" class="primary">Save</button>
+      <p id="status" class="status" role="status"></p>
+    </main>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>
