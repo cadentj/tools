@@ -6,64 +6,99 @@
     <title>Arc Search</title>
     <link rel="stylesheet" href="./assets/popup.css" />
   </head>
-  <body>
-    <main class="app">
-      <h1 class="title">Arc Search</h1>
-      <p class="lead">Command bar shortcut and search behavior.</p>
+  <body
+    class="m-0 w-[360px] bg-[#14141a] font-sans text-[13px] leading-[1.45] text-[#e8e8ee] antialiased"
+  >
+    <main class="px-4 pb-4 pt-3.5">
+      <h1 class="mb-1 text-base font-[650]">Arc Search</h1>
+      <p class="mb-3 text-xs text-[#9898a8]">Command bar shortcut and search behavior.</p>
 
-      <label class="field">
-        <span>Hotkey preset</span>
-        <select id="hotkey-preset">
+      <label class="mb-3 flex flex-col gap-1.5">
+        <span class="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Hotkey preset</span>
+        <select
+          id="hotkey-preset"
+          class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+        >
           <option value="E">⌘/Ctrl + E</option>
           <option value="K">⌘/Ctrl + K</option>
           <option value="T">⌘/Ctrl + T (page override on web pages)</option>
         </select>
       </label>
 
-      <div class="field">
-        <span>Category priority</span>
-        <ul id="priority-list" class="priority"></ul>
-        <p class="hint">Drag to reorder. Lower items have lower priority.</p>
+      <div class="mb-3 flex flex-col gap-1.5">
+        <span class="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Category priority</span>
+        <ul
+          id="priority-list"
+          class="priority m-0 list-none overflow-hidden rounded-[10px] border border-white/10 p-0 [&_li]:cursor-grab [&_li]:border-b [&_li]:border-white/[0.06] [&_li]:bg-white/[0.04] [&_li]:px-2.5 [&_li]:py-2 [&_li]:text-xs [&_li:last-child]:border-b-0"
+        ></ul>
+        <p class="mt-1 text-[11px] text-[#7a7a8c]">Drag to reorder. Lower items have lower priority.</p>
       </div>
 
-      <div class="row2">
-        <label class="field">
-          <span>Max / category</span>
-          <input id="max-per" type="number" min="0" max="50" />
+      <div class="mb-3 grid grid-cols-2 gap-2.5">
+        <label class="flex flex-col gap-1.5">
+          <span class="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Max / category</span>
+          <input
+            id="max-per"
+            type="number"
+            min="0"
+            max="50"
+            class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+          />
         </label>
-        <label class="field">
-          <span>Max total</span>
-          <input id="max-total" type="number" min="1" max="100" />
+        <label class="flex flex-col gap-1.5">
+          <span class="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Max total</span>
+          <input
+            id="max-total"
+            type="number"
+            min="1"
+            max="100"
+            class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+          />
         </label>
       </div>
 
-      <div class="targets">
-        <span>Open targets</span>
-        <label>
+      <div class="mb-3 flex flex-col gap-2">
+        <span class="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Open targets</span>
+        <label class="flex flex-col gap-1 text-xs text-[#c4c4d4]">
           Bookmarks
-          <select id="open-bookmark">
+          <select
+            id="open-bookmark"
+            class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+          >
             <option value="new_tab">New tab</option>
             <option value="current_tab">Current tab</option>
           </select>
         </label>
-        <label>
+        <label class="flex flex-col gap-1 text-xs text-[#c4c4d4]">
           History
-          <select id="open-history">
+          <select
+            id="open-history"
+            class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+          >
             <option value="new_tab">New tab</option>
             <option value="current_tab">Current tab</option>
           </select>
         </label>
-        <label>
+        <label class="flex flex-col gap-1 text-xs text-[#c4c4d4]">
           Web search
-          <select id="open-web">
+          <select
+            id="open-web"
+            class="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+          >
             <option value="new_tab">New tab</option>
             <option value="current_tab">Current tab</option>
           </select>
         </label>
       </div>
 
-      <button id="save" type="button" class="primary">Save</button>
-      <p id="status" class="status" role="status"></p>
+      <button
+        id="save"
+        type="button"
+        class="w-full cursor-pointer rounded-[10px] border-0 bg-gradient-to-b from-[#6ea8ff] to-[#4f87ff] px-3 py-2.5 font-[650] text-[#0b1020] hover:brightness-105"
+      >
+        Save
+      </button>
+      <p id="status" class="mt-2 min-h-[1.2em] text-xs text-[#8ae88a]" role="status"></p>
     </main>
     <script type="module" src="./popup.js"></script>
   </body>

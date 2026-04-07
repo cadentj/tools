@@ -37,7 +37,7 @@ export function makeWebSearchLiteralItem(query: string): ResultItem {
   return {
     id: "web-search-literal",
     category: WEB_CATEGORY,
-    title: `Search Google for "${q || "…"}"`,
+    title: q || "…",
     subtitle: GOOGLE_HOST,
     score: 0,
     actionType: "web_search",

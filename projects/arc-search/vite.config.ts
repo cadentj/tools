@@ -89,6 +89,7 @@ export default defineConfig(({ mode }) => {
         },
       },
       plugins: [
+        tailwindcss(),
         {
           name: "copy-popup-html",
           closeBundle() {

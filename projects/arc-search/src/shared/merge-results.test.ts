@@ -91,7 +91,7 @@ describe("mergeAndTruncate", () => {
     const web = out.filter((r) => r.category === "web");
     expect(web.length).toBe(3);
     expect(web[0]?.id).toBe("web-search-literal");
-    expect(web[0]?.title).toContain("Search Google");
+    expect(web[0]?.title).toBe("hello");
     expect(web[1]?.title).toBe("hello world");
     expect(web[2]?.title).toBe("hello kitty");
   });

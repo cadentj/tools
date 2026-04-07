@@ -1,3 +1,4 @@
+import { createElement, Search, Terminal } from "lucide";
 import styles from "./palette.css?inline";
 import { MSG } from "../shared/messages";
 import type { ExtensionMessage } from "../shared/messages";
@@ -6,9 +7,9 @@ import type { Category, HotkeyPreset, ResultItem } from "../shared/types";
 const DEBOUNCE_MS = 120;
 
 const ROW_BASE =
-  "flex min-w-0 cursor-pointer items-center gap-3 rounded-lg px-4 py-2.5 transition-colors";
+  "flex min-w-0 cursor-pointer items-center gap-3 rounded-lg px-4 py-3";
 const ROW_IDLE = "bg-transparent hover:bg-white/[0.08]";
-const ROW_SELECTED = "bg-[rgba(80,140,255,0.22)]";
+const ROW_SELECTED = "bg-blue-500/20";
 
 let host: HTMLDivElement | null = null;
 let shadow: ShadowRoot | null = null;
@@ -62,50 +63,18 @@ function truncateUrl(url: string, maxLen = 56): string {
 }
 
 function svgIconSearch(): SVGElement {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("width", "16");
-  svg.setAttribute("height", "16");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("class", "h-5 w-5 shrink-0 text-white/70");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  c.setAttribute("cx", "11");
-  c.setAttribute("cy", "11");
-  c.setAttribute("r", "7");
-  const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  p.setAttribute("d", "m20 20-3-3");
-  svg.appendChild(c);
-  svg.appendChild(p);
-  return svg;
+  return createElement(Search, {
+    class: "h-5 w-5 shrink-0 text-white/70",
+  });
 }
 
 function svgIconCommand(): SVGElement {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("width", "16");
-  svg.setAttribute("height", "16");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("class", "h-5 w-5 shrink-0 text-white/55");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-  poly.setAttribute("points", "4 17 10 11 4 5");
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  line.setAttribute("x1", "12");
-  line.setAttribute("y1", "19");
-  line.setAttribute("x2", "20");
-  line.setAttribute("y2", "19");
-  svg.appendChild(poly);
-  svg.appendChild(line);
-  return svg;
+  return createElement(Terminal, {
+    class: "h-5 w-5 shrink-0 text-white/55",
+  });
 }
 
-function appendRowIcon(row: HTMLElement, r: ResultItem): void {
+function appendRowIcon(row: HTMLElement, r: ResultItem, isSelected: boolean): void {
   if (r.category === "web") {
     row.appendChild(svgIconSearch());
     return;
@@ -115,14 +84,20 @@ function appendRowIcon(row: HTMLElement, r: ResultItem): void {
     return;
   }
   if (r.faviconUrl) {
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-favicon-wrap", "");
+    wrapper.className = isSelected
+      ? "flex shrink-0 items-center justify-center rounded-md bg-white p-1"
+      : "flex shrink-0 items-center justify-center rounded-md bg-transparent p-1";
     const img = document.createElement("img");
-    img.className = "h-5 w-5 shrink-0 rounded-sm object-cover";
+    img.className = "h-4 w-4 rounded-sm object-cover";
     img.alt = "";
     img.src = r.faviconUrl;
     img.addEventListener("error", () => {
-      img.replaceWith(svgIconSearch());
+      wrapper.replaceWith(svgIconSearch());
     });
-    row.appendChild(img);
+    wrapper.appendChild(img);
+    row.appendChild(wrapper);
     return;
   }
   row.appendChild(svgIconSearch());
@@ -151,19 +126,22 @@ function ensureHost(): void {
   backdrop.className = "absolute inset-0 bg-black/40 backdrop-blur-[10px]";
   backdrop.addEventListener("click", () => hidePalette());
 
+  const panelScale = document.createElement("div");
+  panelScale.className = "origin-center scale-115";
+
   const panel = document.createElement("div");
   panel.className =
-    "relative w-[min(640px,92vw)] overflow-hidden rounded-[14px] border border-white/[0.08] bg-[rgba(18,18,22,0.92)] shadow-[0_24px_80px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(255,255,255,0.04)]";
+    "relative w-[min(640px,92vw)] overflow-hidden rounded-[14px] border border-solid border-white/30 bg-zinc-950/90 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/10";
 
   const inputRow = document.createElement("div");
-  inputRow.className = "flex items-center gap-3 border-b border-white/[0.08] px-5 py-4";
+  inputRow.className = "flex items-center gap-3 border-b border-solid border-white/25 px-5 py-4";
 
   const inputSearchIcon = svgIconSearch();
   inputSearchIcon.setAttribute("class", "h-6 w-6 shrink-0 text-white/70");
 
   inputEl = document.createElement("input");
   inputEl.className =
-    "min-w-0 flex-1 border-none bg-transparent text-lg text-white/[0.94] outline-none placeholder:text-white/55";
+    "min-w-0 flex-1 border-none bg-transparent text-lg text-white/95 outline-none placeholder:text-white/55";
   inputEl.type = "text";
   inputEl.placeholder = "Search or Enter URL...";
   inputEl.autocomplete = "off";
@@ -174,13 +152,14 @@ function ensureHost(): void {
 
   listEl = document.createElement("div");
   listEl.className = "list-scroll space-y-1 overflow-y-auto p-2";
-  listEl.style.maxHeight = "220px";
+  listEl.style.maxHeight = "252px";
 
   panel.appendChild(inputRow);
   panel.appendChild(listEl);
+  panelScale.appendChild(panel);
 
   wrapEl.appendChild(backdrop);
-  wrapEl.appendChild(panel);
+  wrapEl.appendChild(panelScale);
   shadow.appendChild(wrapEl);
   document.documentElement.appendChild(host);
 
@@ -268,13 +247,13 @@ function renderResults(): void {
       void executeSelected();
     });
 
-    appendRowIcon(row, r);
+    appendRowIcon(row, r, idx === selected);
 
     const label = document.createElement("div");
     label.className = "min-w-0 flex-1 truncate text-[15px]";
 
     const titleSpan = document.createElement("span");
-    titleSpan.className = "font-medium text-white/[0.94]";
+    titleSpan.className = "font-medium text-white/95";
     titleSpan.textContent = r.title;
 
     label.appendChild(titleSpan);
@@ -307,6 +286,26 @@ function renderResults(): void {
   row?.scrollIntoView({ block: "nearest" });
 }
 
+function updateSelection(prev: number, next: number): void {
+  if (!listEl) return;
+  const prevRow = listEl.children[prev] as HTMLElement | undefined;
+  const nextRow = listEl.children[next] as HTMLElement | undefined;
+
+  if (prevRow) {
+    prevRow.className = `${ROW_BASE} ${ROW_IDLE}`;
+    prevRow.setAttribute("aria-selected", "false");
+    const wrapper = prevRow.querySelector("[data-favicon-wrap]") as HTMLElement | null;
+    if (wrapper) wrapper.className = "flex shrink-0 items-center justify-center rounded-md bg-transparent p-1";
+  }
+  if (nextRow) {
+    nextRow.className = `${ROW_BASE} ${ROW_SELECTED}`;
+    nextRow.setAttribute("aria-selected", "true");
+    const wrapper = nextRow.querySelector("[data-favicon-wrap]") as HTMLElement | null;
+    if (wrapper) wrapper.className = "flex shrink-0 items-center justify-center rounded-md bg-white p-1";
+    nextRow.scrollIntoView({ block: "nearest" });
+  }
+}
+
 function trapKeyboard(ev: Event): void {
   if (visible) ev.stopPropagation();
 }
@@ -320,14 +319,16 @@ function onInputKeydown(ev: KeyboardEvent): void {
   }
   if (ev.key === "ArrowDown") {
     ev.preventDefault();
+    const prev = selected;
     selected = Math.min(results.length - 1, selected + 1);
-    renderResults();
+    if (prev !== selected) updateSelection(prev, selected);
     return;
   }
   if (ev.key === "ArrowUp") {
     ev.preventDefault();
+    const prev = selected;
     selected = Math.max(0, selected - 1);
-    renderResults();
+    if (prev !== selected) updateSelection(prev, selected);
     return;
   }
   if (ev.key === "Enter") {

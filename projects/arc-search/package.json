@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.19",
+    "lucide": "^1.7.0",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
