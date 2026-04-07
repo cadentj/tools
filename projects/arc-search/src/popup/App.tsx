@@ -8,13 +8,12 @@ import {
   normalizeSettings,
   saveSettings,
 } from "../shared/settings";
-import type { Category, Settings } from "../shared/types";
+import type { Category, OpenTarget, Settings } from "../shared/types";
 
 const CATEGORY_LABEL: Record<Category, string> = {
   tabs: "Tabs",
   bookmarks: "Bookmarks",
   history: "History",
-  commands: "Commands",
   web: "Web",
 };
 

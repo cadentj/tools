@@ -7,10 +7,14 @@ const SHORTCUT_BY_PRESET: Record<HotkeyPreset, string> = {
   T: "Ctrl+T",
 };
 
+type CommandsUpdate = typeof chrome.commands & {
+  update: (command: { name: string; shortcut?: string }) => Promise<void>;
+};
+
 export async function applyHotkeyPreset(preset: HotkeyPreset): Promise<void> {
   const shortcut = SHORTCUT_BY_PRESET[preset];
   try {
-    await chrome.commands.update({
+    await (chrome.commands as CommandsUpdate).update({
       name: "toggle-palette",
       shortcut,
     });

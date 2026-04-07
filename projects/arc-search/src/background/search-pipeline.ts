@@ -1,7 +1,6 @@
 import uFuzzy from "@leeoniya/ufuzzy";
 import type { Category, ResultItem, Settings } from "../shared/types";
 import { mergeAndTruncate } from "../shared/merge-results";
-import type { BrowserCommandId } from "../shared/types";
 import { fetchGoogleSuggestions } from "./google-suggest";
 
 const uf = new uFuzzy();
@@ -124,26 +123,6 @@ async function collectHistory(): Promise<Candidate[]> {
     }));
 }
 
-function commandCandidates(): Candidate[] {
-  const defs: { id: BrowserCommandId; title: string; subtitle: string }[] = [
-    { id: "new_tab", title: "New tab", subtitle: "Browser" },
-    { id: "close_tab", title: "Close tab", subtitle: "Browser" },
-    { id: "pin_tab", title: "Pin tab", subtitle: "Browser" },
-    { id: "unpin_tab", title: "Unpin tab", subtitle: "Browser" },
-    { id: "duplicate_tab", title: "Duplicate tab", subtitle: "Browser" },
-    { id: "new_incognito_window", title: "New incognito window", subtitle: "Browser" },
-    { id: "close_window", title: "Close window", subtitle: "Browser" },
-  ];
-  return defs.map((d) => ({
-    id: `cmd-${d.id}`,
-    category: "commands" as const,
-    title: d.title,
-    subtitle: d.subtitle,
-    actionType: "run_browser_command" as const,
-    payload: { command: d.id },
-  }));
-}
-
 function scoreFromRankIndex(len: number, rankIndex: number): number {
   if (len <= 1) return 1;
   return 1 - rankIndex / (len - 1);
@@ -160,17 +139,14 @@ export async function queryResults(
     collectHistory(),
     fetchGoogleSuggestions(query),
   ]);
-  const commands = commandCandidates();
 
   const tabHay = tabs.map((t) => `${t.title}\n${t.subtitle}`);
   const bmHay = bookmarks.map((b) => `${b.title}\n${b.subtitle}`);
   const histHay = history.map((h) => `${h.title}\n${h.subtitle}`);
-  const cmdHay = commands.map((c) => `${c.title}\n${c.subtitle}`);
 
   const tabOrder = rankIndices(tabHay, query);
   const bmOrder = rankIndices(bmHay, query);
   const histOrder = rankIndices(histHay, query);
-  const cmdOrder = rankIndices(cmdHay, query);
 
   const byCategory = new Map<Category, ResultItem[]>();
 
@@ -193,7 +169,6 @@ export async function queryResults(
   pushRanked("tabs", tabs, tabOrder);
   pushRanked("bookmarks", bookmarks, bmOrder);
   pushRanked("history", history, histOrder);
-  pushRanked("commands", commands, cmdOrder);
 
   return mergeAndTruncate(byCategory, settings, query, suggestions);
 }

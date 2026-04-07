@@ -4,7 +4,6 @@ export const DEFAULT_CATEGORY_PRIORITY: Category[] = [
   "tabs",
   "bookmarks",
   "history",
-  "commands",
   "web",
 ];
 

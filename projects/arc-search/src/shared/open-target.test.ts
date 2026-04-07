@@ -4,7 +4,7 @@ import { openTargetForUrlCategory } from "./open-target";
 
 const base: Settings = {
   hotkeyPreset: "E",
-  categoryPriority: ["tabs", "bookmarks", "history", "commands", "web"],
+  categoryPriority: ["tabs", "bookmarks", "history", "web"],
   maxPerCategory: 4,
   maxTotal: 16,
   openTargetByCategory: {
@@ -21,8 +21,7 @@ describe("openTargetForUrlCategory", () => {
     expect(openTargetForUrlCategory("web", base)).toBe("new_tab");
   });
 
-  it("defaults tabs and commands to new_tab", () => {
+  it("defaults tabs to new_tab", () => {
     expect(openTargetForUrlCategory("tabs", base)).toBe("new_tab");
-    expect(openTargetForUrlCategory("commands", base)).toBe("new_tab");
   });
 });

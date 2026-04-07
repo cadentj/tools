@@ -1,9 +1,8 @@
-import { runBrowserCommand } from "./browser-actions";
 import { applyHotkeyPreset } from "./hotkeys";
 import { queryResults } from "./search-pipeline";
 import { MSG, type ExtensionMessage } from "../shared/messages";
 import { loadSettings, normalizeSettings } from "../shared/settings";
-import type { ActionType, BrowserCommandId, Category, Settings } from "../shared/types";
+import type { ActionType, Category, Settings } from "../shared/types";
 import { openTargetForUrlCategory } from "../shared/open-target";
 
 async function initHotkeyFromStorage(): Promise<void> {
@@ -63,11 +62,6 @@ async function executeAction(
       } else {
         await chrome.tabs.create({ url });
       }
-      return;
-    }
-    case "run_browser_command": {
-      const { command } = payload as { command: BrowserCommandId };
-      await runBrowserCommand(command);
       return;
     }
     case "web_search": {

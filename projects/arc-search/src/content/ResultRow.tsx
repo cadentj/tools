@@ -1,4 +1,4 @@
-import { Search, Terminal } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, type ReactElement } from "react";
 import type { Category, ResultItem } from "../shared/types";
 
@@ -39,9 +39,6 @@ function RowIcon({
 
   if (r.category === "web") {
     return <Search className="h-5 w-5 shrink-0 text-white/70" aria-hidden />;
-  }
-  if (r.category === "commands") {
-    return <Terminal className="h-5 w-5 shrink-0 text-white/55" aria-hidden />;
   }
   if (r.faviconUrl && !imgFailed) {
     return (

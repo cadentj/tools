@@ -1,9 +1,8 @@
-export type Category = "tabs" | "bookmarks" | "history" | "commands" | "web";
+export type Category = "tabs" | "bookmarks" | "history" | "web";
 
 export type ActionType =
   | "switch_tab"
   | "open_url"
-  | "run_browser_command"
   | "web_search";
 
 export type OpenTarget = "new_tab" | "current_tab";
@@ -21,15 +20,6 @@ export interface ResultItem {
   /** `chrome-extension://…/_favicon/` URL for tabs/bookmarks/history with http(s) pages */
   faviconUrl?: string;
 }
-
-export type BrowserCommandId =
-  | "new_tab"
-  | "close_tab"
-  | "pin_tab"
-  | "unpin_tab"
-  | "duplicate_tab"
-  | "new_incognito_window"
-  | "close_window";
 
 export interface Settings {
   hotkeyPreset: HotkeyPreset;
