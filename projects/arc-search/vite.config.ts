@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,8 +21,11 @@ function copyPopupHtml() {
 }
 
 export default defineConfig(({ mode }) => {
+  const define = { "process.env.NODE_ENV": JSON.stringify("production") };
+
   if (mode === "background") {
     return {
+      define,
       build: {
         lib: {
           entry: resolve(root, "src/background/index.ts"),
@@ -30,7 +34,8 @@ export default defineConfig(({ mode }) => {
           fileName: () => "background.js",
         },
         outDir: "dist",
-        emptyOutDir: true,
+        /** false: concurrent `vite build --watch` modes must not delete each other's outputs */
+        emptyOutDir: false,
         rollupOptions: {
           output: {
             inlineDynamicImports: true,
@@ -50,10 +55,11 @@ export default defineConfig(({ mode }) => {
 
   if (mode === "content") {
     return {
-      plugins: [tailwindcss()],
+      define,
+      plugins: [react(), tailwindcss()],
       build: {
         lib: {
-          entry: resolve(root, "src/content/main.ts"),
+          entry: resolve(root, "src/content/main.tsx"),
           name: "content",
           formats: ["iife"],
           fileName: () => "content.js",
@@ -71,9 +77,10 @@ export default defineConfig(({ mode }) => {
 
   if (mode === "popup") {
     return {
+      define,
       build: {
         lib: {
-          entry: resolve(root, "src/popup/main.ts"),
+          entry: resolve(root, "src/popup/main.tsx"),
           name: "popup",
           formats: ["es"],
           fileName: () => "popup.js",
@@ -89,6 +96,7 @@ export default defineConfig(({ mode }) => {
         },
       },
       plugins: [
+        react(),
         tailwindcss(),
         {
           name: "copy-popup-html",

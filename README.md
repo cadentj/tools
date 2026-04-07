@@ -1,3 +1,11 @@
+# Fun! 
+
+## projects/arc-search
+
+An extension for Google Chrome which mimic's Arc's cmd+T menu.
+
+**Build note (Vite + React):** The build uses custom Vite modes (`--mode background`, `--mode content`, `--mode popup`). That does not set `process.env.NODE_ENV` to `"production"`, so React would otherwise bundle in **development** mode (huge bundles, odd behavior in the extension). `vite.config.ts` defines `process.env.NODE_ENV` as `"production"` so React stays on the production build.
+
 # Tools
 
 Various tools and MCPs for agent use.

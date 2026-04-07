@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 /* Scan this file’s sibling for utility classes used in the content script */
-@source "./main.ts";
+@source "./main.tsx";
+@source "./Palette.tsx";
+@source "./ResultRow.tsx";
 
 @layer components {
   :host {

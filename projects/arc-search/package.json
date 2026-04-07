@@ -4,23 +4,32 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite build --mode background && vite build --mode content && vite build --mode popup && vite build --watch --mode popup",
-    "build": "vite build --mode background && vite build --mode content && vite build --mode popup",
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && vite build --mode background && vite build --mode content && vite build --mode popup",
+    "dev": "pnpm build && concurrently -k -n bg,content,popup \"vite build --watch --mode background\" \"vite build --watch --mode content\" \"vite build --watch --mode popup\"",
+    "dev:ext": "web-ext run --target=chromium --source-dir=dist",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.19",
-    "lucide": "^1.7.0",
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
     "@types/chrome": "^0.0.268",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@types/sortablejs": "^1.15.9",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "web-ext": "^10.1.0"
   }
 }

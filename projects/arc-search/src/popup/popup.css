@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 
-@source "../../popup.html";
+@source "./App.tsx";
+@source "./main.tsx";
 
 @layer components {
   /* SortableJS adds this class at runtime — not present in static HTML */
