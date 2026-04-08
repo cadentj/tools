@@ -15,6 +15,16 @@ import { ResultRow } from "./ResultRow";
 
 const DEBOUNCE_MS = 120;
 
+/**
+ * List scroll area max-height (border-box): five rows + gaps + list `pt-2`.
+ *   ResultRow uses `p-2` (0.5rem vertical) + icon column (~1.5rem: `p-1` + h-4) ≈ 2.5rem/row
+ *   gap = space-y-1 = 0.25rem
+ *   rows + gaps = 5 × 2.5 + 4 × 0.25 = 13.5rem
+ *   pt-2 = 0.5rem
+ *   total = 14rem
+ */
+const LIST_MAX_HEIGHT = "14rem";
+
 function isEditableTarget(el: EventTarget | null): boolean {
   if (!el || !(el instanceof HTMLElement)) return false;
   const tag = el.tagName;
@@ -219,10 +229,15 @@ export function Palette(): ReactElement {
         aria-hidden
       />
       <div className="origin-center scale-115">
-        <div className="relative w-[min(640px,92vw)] overflow-hidden rounded-[14px] border border-solid border-white/20 bg-zinc-950/90 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/10 px-2">
+        <div className="relative flex flex-col overflow-hidden max-h-[92vh] w-[640px] px-2 pb-2 rounded-[14px] border border-solid border-white/20 bg-zinc-950/90 shadow-2xl shadow-black/50">
           {/* Search Bar */}
-          <div className="flex items-center gap-3 border-b border-solid border-white/15 px-3 py-4">
-            <Search className="size-3 stroke-3 bold shrink-0 text-white" aria-hidden />
+          <div className="flex shrink-0 items-center gap-3 border-b border-solid border-white/15 px-2 py-3">
+            <div className="flex shrink-0 items-center justify-center rounded-md p-1">
+              <Search
+                className="h-4 w-4 shrink-0 stroke-2 text-white/70"
+                aria-hidden
+              />
+            </div>
             <input
               ref={inputRef}
               className="min-w-0 flex-1 border-none bg-transparent text-lg text-white/95 outline-none placeholder:text-white/55"
@@ -237,8 +252,8 @@ export function Palette(): ReactElement {
           </div>
           <div
             ref={listRef}
-            className="list-scroll space-y-1 overflow-y-auto"
-            style={{ maxHeight: "252px" }}
+            className="list-scroll min-h-0 space-y-1 overflow-y-auto pt-2"
+            style={{ maxHeight: LIST_MAX_HEIGHT }}
           >
             {results.length === 0 ? (
               <div className="px-4 py-3.5 text-sm text-white/55">No matches</div>

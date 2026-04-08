@@ -33,8 +33,19 @@ function RowIcon({
 }): ReactElement {
   const [imgFailed, setImgFailed] = useState(false);
 
+  const searchIconWrap = (
+    <div
+      className="flex shrink-0 items-center justify-center rounded-md p-1"
+    >
+      <Search
+        className="h-4 w-4 shrink-0 stroke-2 text-white/70"
+        aria-hidden
+      />
+    </div>
+  );
+
   if (r.category === "web") {
-    return <Search className="h-5 w-5 shrink-0 text-white/70" aria-hidden />;
+    return searchIconWrap;
   }
   if (r.faviconUrl && !imgFailed) {
     return (
@@ -54,7 +65,7 @@ function RowIcon({
       </div>
     );
   }
-  return <Search className="h-5 w-5 shrink-0 text-white/70" aria-hidden />;
+  return searchIconWrap;
 }
 
 export function ResultRow({
@@ -71,7 +82,7 @@ export function ResultRow({
   return (
     <div
       className={cn(
-        "flex min-w-0 cursor-pointer items-center gap-3 rounded-lg px-4 py-3",
+        "flex min-w-0 cursor-pointer items-center gap-3 rounded-md p-2",
         selected ? "bg-blue-500/20" : "bg-transparent hover:bg-white/8",
       )}
       role="option"

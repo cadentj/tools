@@ -83,7 +83,7 @@ export function App(): ReactElement {
           <span className="text-[11px] uppercase tracking-[0.06em] text-[#9898a8]">Hotkey preset</span>
           <select
             id="hotkey-preset"
-            className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+            className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
             value={settings.hotkeyPreset}
             onChange={(e) =>
               setSettings((s) => ({ ...s, hotkeyPreset: e.target.value as Settings["hotkeyPreset"] }))
@@ -119,7 +119,7 @@ export function App(): ReactElement {
               type="number"
               min={0}
               max={50}
-              className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+              className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxPerCategory}
               onChange={(e) =>
                 setSettings((s) => ({ ...s, maxPerCategory: Number(e.target.value) || s.maxPerCategory }))
@@ -133,7 +133,7 @@ export function App(): ReactElement {
               type="number"
               min={1}
               max={100}
-              className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+              className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxTotal}
               onChange={(e) =>
                 setSettings((s) => ({ ...s, maxTotal: Number(e.target.value) || s.maxTotal }))
@@ -148,7 +148,7 @@ export function App(): ReactElement {
             Bookmarks
             <select
               id="open-bookmark"
-              className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+              className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.openTargetByCategory.bookmark}
               onChange={(e) =>
                 setSettings((s) => ({
@@ -168,7 +168,7 @@ export function App(): ReactElement {
             History
             <select
               id="open-history"
-              className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+              className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.openTargetByCategory.history}
               onChange={(e) =>
                 setSettings((s) => ({
@@ -188,7 +188,7 @@ export function App(): ReactElement {
             Web search
             <select
               id="open-web"
-              className="w-full rounded-lg border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
+              className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.openTargetByCategory.web}
               onChange={(e) =>
                 setSettings((s) => ({
