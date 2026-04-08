@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import { render } from "preact";
 import styles from "./palette.css?inline";
 import { Palette } from "./Palette";
 
@@ -13,4 +13,4 @@ const mount = document.createElement("div");
 shadow.appendChild(mount);
 document.documentElement.appendChild(host);
 
-createRoot(mount).render(<Palette />);
+render(<Palette />, mount);

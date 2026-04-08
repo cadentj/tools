@@ -4,11 +4,13 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmit": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["chrome", "vite/client"],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "vitest.config.ts"]
 }

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import type { JSX } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
 import Sortable from "sortablejs";
 import { MSG } from "../shared/messages";
 import type { ExtensionMessage } from "../shared/messages";
@@ -17,7 +18,7 @@ const CATEGORY_LABEL: Record<Category, string> = {
   web: "Web",
 };
 
-export function App(): ReactElement {
+export function App(): JSX.Element {
   const [settings, setSettings] = useState<Settings>(() => ({
     ...DEFAULT_SETTINGS,
     categoryPriority: [...DEFAULT_SETTINGS.categoryPriority],
@@ -86,7 +87,10 @@ export function App(): ReactElement {
             className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
             value={settings.hotkeyPreset}
             onChange={(e) =>
-              setSettings((s) => ({ ...s, hotkeyPreset: e.target.value as Settings["hotkeyPreset"] }))
+              setSettings((s) => ({
+                ...s,
+                hotkeyPreset: e.currentTarget.value as Settings["hotkeyPreset"],
+              }))
             }
           >
             <option value="E">⌘/Ctrl + E</option>
@@ -122,7 +126,10 @@ export function App(): ReactElement {
               className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxPerCategory}
               onChange={(e) =>
-                setSettings((s) => ({ ...s, maxPerCategory: Number(e.target.value) || s.maxPerCategory }))
+                setSettings((s) => ({
+                  ...s,
+                  maxPerCategory: Number(e.currentTarget.value) || s.maxPerCategory,
+                }))
               }
             />
           </label>
@@ -136,7 +143,10 @@ export function App(): ReactElement {
               className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxTotal}
               onChange={(e) =>
-                setSettings((s) => ({ ...s, maxTotal: Number(e.target.value) || s.maxTotal }))
+                setSettings((s) => ({
+                  ...s,
+                  maxTotal: Number(e.currentTarget.value) || s.maxTotal,
+                }))
               }
             />
           </label>
@@ -155,7 +165,7 @@ export function App(): ReactElement {
                   ...s,
                   openTargetByCategory: {
                     ...s.openTargetByCategory,
-                    bookmark: e.target.value as OpenTarget,
+                    bookmark: e.currentTarget.value as OpenTarget,
                   },
                 }))
               }
@@ -175,7 +185,7 @@ export function App(): ReactElement {
                   ...s,
                   openTargetByCategory: {
                     ...s.openTargetByCategory,
-                    history: e.target.value as OpenTarget,
+                    history: e.currentTarget.value as OpenTarget,
                   },
                 }))
               }
@@ -195,7 +205,7 @@ export function App(): ReactElement {
                   ...s,
                   openTargetByCategory: {
                     ...s.openTargetByCategory,
-                    web: e.target.value as OpenTarget,
+                    web: e.currentTarget.value as OpenTarget,
                   },
                 }))
               }

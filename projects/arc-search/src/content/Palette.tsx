@@ -1,13 +1,11 @@
-import { Search } from "lucide-react";
+import { Search } from "lucide-preact";
+import type { JSX } from "preact";
 import {
   useCallback,
   useEffect,
   useRef,
   useState,
-  type ChangeEvent,
-  type KeyboardEvent,
-  type ReactElement,
-} from "react";
+} from "preact/hooks";
 import { MSG } from "../shared/messages";
 import type { ExtensionMessage } from "../shared/messages";
 import type { HotkeyPreset, ResultItem } from "../shared/types";
@@ -32,7 +30,7 @@ function isEditableTarget(el: EventTarget | null): boolean {
   return el.isContentEditable;
 }
 
-export function Palette(): ReactElement {
+export function Palette(): JSX.Element {
   const [visible, setVisible] = useState(false);
   const visibleRef = useRef(false);
   const [query, setQuery] = useState("");
@@ -151,8 +149,8 @@ export function Palette(): ReactElement {
   }, [selected, results]);
 
   const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const v = e.target.value;
+    (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+      const v = e.currentTarget.value;
       setQuery(v);
       clearDebounce();
       debounceTimerRef.current = setTimeout(() => {
@@ -185,7 +183,7 @@ export function Palette(): ReactElement {
   );
 
   const onInputKeydown = useCallback(
-    (ev: KeyboardEvent<HTMLInputElement>) => {
+    (ev: JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
       if (!visible) return;
       if (ev.key === "Escape") {
         ev.preventDefault();
@@ -212,7 +210,7 @@ export function Palette(): ReactElement {
     [visible, hidePalette, results.length, executeAt, selected],
   );
 
-  const trapKeyboard = useCallback((ev: KeyboardEvent<HTMLDivElement>) => {
+  const trapKeyboard = useCallback((ev: JSX.TargetedKeyboardEvent<HTMLDivElement>) => {
     if (visibleRef.current) ev.stopPropagation();
   }, []);
 
@@ -244,7 +242,7 @@ export function Palette(): ReactElement {
               type="text"
               placeholder="Search or Enter URL..."
               autoComplete="off"
-              spellCheck={false}
+              spellcheck={false}
               value={query}
               onChange={handleInputChange}
               onKeyDown={onInputKeydown}

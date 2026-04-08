@@ -1,13 +1,14 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { render } from "preact";
+import { StrictMode } from "preact/compat";
 import "./popup.css";
 import { App } from "./App";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing #root");
 
-createRoot(root).render(
+render(
   <StrictMode>
     <App />
   </StrictMode>,
+  root,
 );

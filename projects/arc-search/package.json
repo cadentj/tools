@@ -14,19 +14,16 @@
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.19",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.7.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "lucide-preact": "^0.562.0",
+    "preact": "^10.28.0",
     "sortablejs": "^1.15.6",
     "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
     "@tailwindcss/vite": "^4.1.0",
     "@types/chrome": "^0.0.268",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
     "@types/sortablejs": "^1.15.9",
-    "@vitejs/plugin-react": "^4.7.0",
     "concurrently": "^9.2.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.2",

@@ -1,5 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
+import preact from "@preact/preset-vite";
 import { defineConfig } from "vite";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
   if (mode === "content") {
     return {
       define,
-      plugins: [react(), tailwindcss()],
+      plugins: [preact(), tailwindcss()],
       build: {
         lib: {
           entry: resolve(root, "src/content/main.tsx"),
@@ -96,7 +96,7 @@ export default defineConfig(({ mode }) => {
         },
       },
       plugins: [
-        react(),
+        preact(),
         tailwindcss(),
         {
           name: "copy-popup-html",

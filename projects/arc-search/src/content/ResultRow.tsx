@@ -1,5 +1,6 @@
-import { Search, ArrowRight } from "lucide-react";
-import { useState, type ReactElement } from "react";
+import { Search, ArrowRight } from "lucide-preact";
+import type { JSX } from "preact";
+import { useState } from "preact/hooks";
 import { cn } from "../lib/utils";
 import type { Category, ResultItem } from "../shared/types";
 
@@ -30,7 +31,7 @@ function RowIcon({
 }: {
   r: ResultItem;
   selected: boolean;
-}): ReactElement {
+}): JSX.Element {
   const [imgFailed, setImgFailed] = useState(false);
 
   const searchIconWrap = (
@@ -78,7 +79,7 @@ export function ResultRow({
   idx: number;
   selected: boolean;
   onActivate: (idx: number) => void;
-}): ReactElement {
+}): JSX.Element {
   return (
     <div
       className={cn(
