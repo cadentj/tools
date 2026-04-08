@@ -41,10 +41,6 @@ export function Palette(): JSX.Element {
   const listRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    visibleRef.current = visible;
-  }, [visible]);
-
   const clearDebounce = useCallback(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -100,12 +96,15 @@ export function Palette(): JSX.Element {
 
   const hidePalette = useCallback(() => {
     clearDebounce();
+    visibleRef.current = false;
     setVisible(false);
     unlockScroll();
   }, [clearDebounce, unlockScroll]);
 
   const showPalette = useCallback(() => {
     clearDebounce();
+    /** Sync before `queryNow`: state commits after this tick, but `queryNow` can resolve first and would hit `!visibleRef.current`. */
+    visibleRef.current = true;
     setVisible(true);
     lockScroll();
     setQuery("");
