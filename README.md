@@ -1,11 +1,3 @@
-# Fun! 
-
-## projects/arc-search
-
-An extension for Google Chrome which mimic's Arc's cmd+T menu.
-
-**Build note (Vite + React):** The build uses custom Vite modes (`--mode background`, `--mode content`, `--mode popup`). That does not set `process.env.NODE_ENV` to `"production"`, so React would otherwise bundle in **development** mode (huge bundles, odd behavior in the extension). `vite.config.ts` defines `process.env.NODE_ENV` as `"production"` so React stays on the production build.
-
 # Tools
 
 Various tools and MCPs for agent use.
@@ -43,3 +35,13 @@ Contains basic commands for editing Google Docs.
 TODO(cadentj): List some differences.
 
 *Main difference is that, Google's default cli and api tools suck. They only give you append at the bottom of a doc options, in a TERRIBLE rich text format. If you don't know what that's like, check out Lexical [[link](https://playground.lexical.dev/)]. This is verbose and hard to make concise edits to.*
+
+# Fun! 
+
+## projects/arc-search
+
+An extension for Google Chrome which mimic's Arc's cmd+T menu.
+
+There are existing extensions [link](https://chromewebstore.google.com/detail/arc-search/odgoljhpkjakkddmnegkfnklbbiifkoe?pli=1) but they're not OS and I don't really trust random extensions on the web store.
+
+**Build note (Vite + React):** The build uses custom Vite modes (`--mode background`, `--mode content`, `--mode popup`). That does not set `process.env.NODE_ENV` to `"production"`, so React would otherwise bundle in **development** mode (huge bundles, odd behavior in the extension). `vite.config.ts` defines `process.env.NODE_ENV` as `"production"` so React stays on the production build.
