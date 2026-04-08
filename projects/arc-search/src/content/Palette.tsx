@@ -212,7 +212,6 @@ export function Palette(): ReactElement {
       style={{ display: visible ? "flex" : "none" }}
       onKeyDown={trapKeyboard}
       onKeyUp={trapKeyboard}
-      onKeyPress={trapKeyboard}
     >
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[10px]"
@@ -220,9 +219,10 @@ export function Palette(): ReactElement {
         aria-hidden
       />
       <div className="origin-center scale-115">
-        <div className="relative w-[min(640px,92vw)] overflow-hidden rounded-[14px] border border-solid border-white/30 bg-zinc-950/90 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/10">
-          <div className="flex items-center gap-3 border-b border-solid border-white/25 px-5 py-4">
-            <Search className="h-6 w-6 shrink-0 text-white/70" aria-hidden />
+        <div className="relative w-[min(640px,92vw)] overflow-hidden rounded-[14px] border border-solid border-white/20 bg-zinc-950/90 shadow-2xl shadow-black/50 ring-1 ring-inset ring-white/10 px-2">
+          {/* Search Bar */}
+          <div className="flex items-center gap-3 border-b border-solid border-white/15 px-3 py-4">
+            <Search className="size-3 stroke-3 bold shrink-0 text-white" aria-hidden />
             <input
               ref={inputRef}
               className="min-w-0 flex-1 border-none bg-transparent text-lg text-white/95 outline-none placeholder:text-white/55"
@@ -237,7 +237,7 @@ export function Palette(): ReactElement {
           </div>
           <div
             ref={listRef}
-            className="list-scroll space-y-1 overflow-y-auto p-2"
+            className="list-scroll space-y-1 overflow-y-auto"
             style={{ maxHeight: "252px" }}
           >
             {results.length === 0 ? (

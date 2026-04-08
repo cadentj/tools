@@ -21,7 +21,7 @@ function truncateUrl(url: string, maxLen = 56): string {
 }
 
 function showUrlBesideTitle(category: Category): boolean {
-  return category === "tabs" || category === "bookmarks" || category === "history";
+  return category === "bookmarks" || category === "history";
 }
 
 function RowIcon({
@@ -89,9 +89,19 @@ export function ResultRow({
         ) : null}
       </div>
       {r.category === "tabs" ? (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <span className="ml-2 shrink-0 whitespace-nowrap text-xs text-white/45">Switch to Tab</span>
-          <ArrowRight className="h-4 w-4" />
+          <div
+            className={cn(
+              "flex shrink-0 items-center justify-center rounded-md p-1",
+              selected ? "bg-white" : "bg-white/10",
+            )}
+          >
+            <ArrowRight
+              className={cn("h-4 w-4", selected ? "text-neutral-900" : "text-white/70")}
+              aria-hidden
+            />
+          </div>
         </div>
       ) : null}
     </div>
