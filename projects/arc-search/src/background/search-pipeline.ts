@@ -107,7 +107,7 @@ async function flattenBookmarks(): Promise<{ id: string; title: string; url: str
 async function collectHistory(): Promise<Candidate[]> {
   const items = await chrome.history.search({
     text: "",
-    maxResults: 200,
+    maxResults: 10000,
     startTime: Date.now() - 90 * 24 * 60 * 60 * 1000,
   });
   return items
