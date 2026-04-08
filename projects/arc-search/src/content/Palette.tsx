@@ -30,7 +30,7 @@ function isEditableTarget(el: EventTarget | null): boolean {
   return el.isContentEditable;
 }
 
-export function Palette(): JSX.Element {
+export function Palette(): JSX.Element | null {
   const [visible, setVisible] = useState(false);
   const visibleRef = useRef(false);
   const [query, setQuery] = useState("");
@@ -103,7 +103,6 @@ export function Palette(): JSX.Element {
 
   const showPalette = useCallback(() => {
     clearDebounce();
-    /** Sync before `queryNow`: state commits after this tick, but `queryNow` can resolve first and would hit `!visibleRef.current`. */
     visibleRef.current = true;
     setVisible(true);
     lockScroll();
@@ -213,10 +212,11 @@ export function Palette(): JSX.Element {
     if (visibleRef.current) ev.stopPropagation();
   }, []);
 
+  if (!visible) return null;
+
   return (
     <div
       className="pointer-events-auto fixed inset-0 z-[2147483646] flex items-center justify-center"
-      style={{ display: visible ? "flex" : "none" }}
       onKeyDown={trapKeyboard}
       onKeyUp={trapKeyboard}
     >
@@ -243,7 +243,7 @@ export function Palette(): JSX.Element {
               autoComplete="off"
               spellcheck={false}
               value={query}
-              onChange={handleInputChange}
+              onInput={handleInputChange}
               onKeyDown={onInputKeydown}
             />
           </div>

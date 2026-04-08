@@ -125,7 +125,7 @@ export function App(): JSX.Element {
               max={50}
               className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxPerCategory}
-              onChange={(e) =>
+              onInput={(e) =>
                 setSettings((s) => ({
                   ...s,
                   maxPerCategory: Number(e.currentTarget.value) || s.maxPerCategory,
@@ -142,7 +142,7 @@ export function App(): JSX.Element {
               max={100}
               className="w-full rounded-md border border-white/12 bg-white/5 px-2.5 py-2 text-inherit outline-none"
               value={settings.maxTotal}
-              onChange={(e) =>
+              onInput={(e) =>
                 setSettings((s) => ({
                   ...s,
                   maxTotal: Number(e.currentTarget.value) || s.maxTotal,
