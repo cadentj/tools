@@ -1,11 +1,7 @@
-import { Search } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import { useState, type ReactElement } from "react";
+import { cn } from "../lib/utils";
 import type { Category, ResultItem } from "../shared/types";
-
-const ROW_BASE =
-  "flex min-w-0 cursor-pointer items-center gap-3 rounded-lg px-4 py-3";
-const ROW_IDLE = "bg-transparent hover:bg-white/[0.08]";
-const ROW_SELECTED = "bg-blue-500/20";
 
 /** Middle-truncate URL for single-line display (Arc-style). */
 function truncateUrl(url: string, maxLen = 56): string {
@@ -44,11 +40,10 @@ function RowIcon({
     return (
       <div
         data-favicon-wrap=""
-        className={
-          selected
-            ? "flex shrink-0 items-center justify-center rounded-md bg-white p-1"
-            : "flex shrink-0 items-center justify-center rounded-md bg-transparent p-1"
-        }
+        className={cn(
+          "flex shrink-0 items-center justify-center rounded-md p-1",
+          selected ? "bg-white" : "bg-transparent",
+        )}
       >
         <img
           className="h-4 w-4 rounded-sm object-cover"
@@ -75,7 +70,10 @@ export function ResultRow({
 }): ReactElement {
   return (
     <div
-      className={`${ROW_BASE} ${selected ? ROW_SELECTED : ROW_IDLE}`}
+      className={cn(
+        "flex min-w-0 cursor-pointer items-center gap-3 rounded-lg px-4 py-3",
+        selected ? "bg-blue-500/20" : "bg-transparent hover:bg-white/8",
+      )}
       role="option"
       aria-selected={selected}
       onClick={() => onActivate(idx)}
@@ -91,7 +89,10 @@ export function ResultRow({
         ) : null}
       </div>
       {r.category === "tabs" ? (
-        <span className="ml-2 shrink-0 whitespace-nowrap text-xs text-white/45">Switch to Tab</span>
+        <div className="flex items-center gap-1">
+          <span className="ml-2 shrink-0 whitespace-nowrap text-xs text-white/45">Switch to Tab</span>
+          <ArrowRight className="h-4 w-4" />
+        </div>
       ) : null}
     </div>
   );
