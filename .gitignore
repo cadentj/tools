@@ -1,7 +1,11 @@
-# Google API credentials
+# Credentials
 
+# Google API credentials
 credentials.json
 token.json
+
+# Environment variables
+.env
 
 # Python
 
