@@ -45,7 +45,7 @@ def docs_tabs(doc_id: str) -> str:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return tabs(service, doc_id)
 
     return _tool_result(action)
@@ -61,7 +61,7 @@ def docs_get(doc_id: str, tab: str = "") -> str:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return get_tab(service, doc_id, tab or None)
 
     return _tool_result(action)
@@ -78,7 +78,7 @@ def docs_append(doc_id: str, text: str, tab: str = "") -> str:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return append(service, doc_id, text, tab or None)
 
     return _tool_result(action)
@@ -103,7 +103,7 @@ def docs_replace(
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return replace(service, doc_id, old, new, regex=regex, tab=tab)
 
     return _tool_result(action)
@@ -121,7 +121,7 @@ def docs_insert(doc_id: str, index: int, text: str, tab: str = "") -> str:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return insert(service, doc_id, index, text, tab or None)
 
     return _tool_result(action)
@@ -139,7 +139,7 @@ def docs_delete(doc_id: str, start_index: int, end_index: int, tab: str = "") ->
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return delete(service, doc_id, start_index, end_index, tab or None)
 
     return _tool_result(action)
@@ -158,7 +158,7 @@ def docs_link(doc_id: str, start_index: int, end_index: int, url: str = "", tab:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return link(service, doc_id, start_index, end_index, url or None, tab or None)
 
     return _tool_result(action)
@@ -183,7 +183,7 @@ def docs_insert_table_row(
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return insert_table_row(service, doc_id, table_index, row, below=below, tab=tab or None)
 
     return _tool_result(action)
@@ -201,7 +201,7 @@ def docs_delete_table_row(doc_id: str, table_index: int, row: int, tab: str = ""
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return delete_table_row(service, doc_id, table_index, row, tab or None)
 
     return _tool_result(action)
@@ -217,7 +217,7 @@ def docs_delete_tab(doc_id: str, tab: str) -> str:
     """
 
     def action() -> str:
-        service = get_service(allow_browser_flow=False)
+        service = get_service()
         return delete_tab(service, doc_id, tab)
 
     return _tool_result(action)

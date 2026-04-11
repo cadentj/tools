@@ -1,0 +1,15 @@
+[project]
+name = "launcher"
+version = "0.1.0"
+description = "Fuzzy launcher TUI for macOS: open apps, dirs, Claude prompts, and custom aliases."
+requires-python = ">=3.12"
+dependencies = [
+    "textual>=2.0.0",
+]
+
+[project.scripts]
+launcher = "launcher:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

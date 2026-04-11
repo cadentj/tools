@@ -3,11 +3,12 @@
 
 from __future__ import annotations
 
-import argparse
 import os
 import sys
+import textwrap
 
 from googleapiclient.errors import HttpError
+import typer
 
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _REPO_ROOT not in sys.path:
@@ -27,187 +28,255 @@ from tools.docs import (  # noqa: E402
     tabs,
 )
 
+_APP_HELP = textwrap.dedent(
+    """
+    Edit Google Docs via the Docs API (OAuth). Install as the `docs` console script
+    (see pyproject.toml); put .venv/bin on PATH or use a shell alias.
 
-def cmd_tabs(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(tabs(service, args.doc_id))
+    \b
+    Document ID (every command):
+      Pass --doc-id with the raw ID from the URL (.../d/DOC_ID/edit/...), not the full URL.
+
+    \b
+    Environment:
+      GOOGLE_DOCS_CREDENTIALS_JSON — OAuth client JSON (installed/ web client secret).
+      GOOGLE_DOCS_TOKEN_JSON — authorized-user token JSON.
+      With 1Password: op run --env-file .env -- docs ...
+
+    \b
+    Commands:
+      tabs        List all tabs (titles and IDs, including nested).
+      get         Print one tab as indexed text; use for character indices.
+      delete-tab  Remove a tab by title or t.* ID (children removed too).
+      update      Subcommands: append, replace, insert, delete, link, insert-table-row,
+                  delete-table-row (see: docs update --help).
+
+    \b
+    Workflow:
+      Prefer `update replace` when possible (no index bookkeeping).
+      Run `tabs` first if tab names are unknown.
+      Run `get` before insert/delete/link; re-get after positional edits (indices shift).
+      For multiple index edits in one go, edit bottom-to-top so earlier indices stay valid.
+    """
+).strip()
+
+_UPDATE_HELP = textwrap.dedent(
+    """
+    Edit the document. Target one tab with --tab on this group (title or t.* ID);
+    default is the first tab.
+
+    \b
+    Without --tab: `replace` runs on ALL tabs; other subcommands use the first tab only.
+
+    \b
+    insert/delete/link use character indices from `get` output ([N] at line start).
+    replace is literal (case-sensitive) unless -E; regex mode supports numeric backreferences in the replacement string.
+    Table row commands use the table_index from the <|TABLE|> line in `get` output.
+    """
+).strip()
+
+_DOC_ID_HELP = (
+    "Raw Google Docs document ID from the URL (.../d/DOC_ID/edit), not a full URL."
+)
+
+_TAB_OPT_HELP = 'Tab title or tab ID like "t.xxx" (default: first tab).'
+
+_GET_HELP = textwrap.dedent(
+    """
+    Print one tab as compact indexed text. Each line starts with [N] (character index).
+
+    Markers: <|TABLE|> (rows below), <|IMAGE|> / <|IMAGE uri=...|>, <|LINK url=...|>text<|/LINK|>.
+    """
+).strip()
+
+_TABS_HELP = "List every tab with title and ID (nested tabs indented)."
+
+_DELETE_TAB_HELP = "Delete a tab by title or t.* ID; all child tabs are removed too."
+
+_REPLACE_HELP = textwrap.dedent(
+    """
+    Find and replace in the tab (or all tabs if no --tab). Literal match is case-sensitive.
+    Use -E for Python regex; replacement can reference regex groups (e.g. first group in replacement).
+    """
+).strip()
+
+_INSERT_HELP = (
+    "Insert text at character index (from `get`). Works inside table cells; indices come from `get`."
+)
+
+_DELETE_RANGE_HELP = "Delete characters [start_index, end_index) — half-open range from `get`."
+
+_LINK_HELP = (
+    "Set hyperlink on [start, end) or omit URL to remove link. Indices from `get`."
+)
+
+_INSERT_ROW_HELP = textwrap.dedent(
+    """
+    Insert a table row relative to row (0-based). table_index is the [N] on the <|TABLE|> line.
+    Default inserts below; use --above to insert above.
+    """
+).strip()
+
+_DELETE_ROW_HELP = (
+    "Delete row (0-based) from the table whose <|TABLE|> line shows table_index."
+)
+
+app = typer.Typer(help=_APP_HELP, no_args_is_help=True)
+update_app = typer.Typer(help=_UPDATE_HELP, no_args_is_help=True)
+app.add_typer(update_app, name="update")
 
 
-def cmd_get(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(get_tab(service, args.doc_id, getattr(args, "tab", None)))
+def _root_obj(ctx: typer.Context) -> dict:
+    c = ctx
+    while c.parent is not None:
+        c = c.parent
+    return c.obj
 
 
-def cmd_append(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(append(service, args.doc_id, args.text, getattr(args, "tab", None)))
+def _service(_ctx: typer.Context):
+    return get_service()
 
 
-def cmd_replace(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(
-        replace(
-            service,
-            args.doc_id,
-            args.old,
-            args.new,
-            regex=getattr(args, "regex", False),
-            tab=getattr(args, "tab", "") or "",
-        )
-    )
+@update_app.callback()
+def update_cb(
+    ctx: typer.Context,
+    tab: str = typer.Option("", "--tab", help=_TAB_OPT_HELP),
+) -> None:
+    ctx.obj = {"tab": tab or None}
 
 
-def cmd_insert(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(insert(service, args.doc_id, args.index, args.text, getattr(args, "tab", None)))
+@app.callback()
+def main_cb(
+    ctx: typer.Context,
+    doc_id: str = typer.Option(
+        ...,
+        "--doc-id",
+        metavar="ID",
+        help=_DOC_ID_HELP,
+    ),
+) -> None:
+    ctx.obj = {"doc_id": doc_id}
 
 
-def cmd_delete(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(
-        delete(
-            service,
-            args.doc_id,
-            args.start_index,
-            args.end_index,
-            getattr(args, "tab", None),
-        )
-    )
+@app.command("tabs", help=_TABS_HELP)
+def cmd_tabs(ctx: typer.Context) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    print(tabs(_service(ctx), doc_id))
 
 
-def cmd_link(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(
-        link(
-            service,
-            args.doc_id,
-            args.start_index,
-            args.end_index,
-            args.url,
-            getattr(args, "tab", None),
-        )
-    )
+@app.command("get", help=_GET_HELP)
+def cmd_get(
+    ctx: typer.Context,
+    tab: str = typer.Option("", "--tab", help=_TAB_OPT_HELP),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    print(get_tab(_service(ctx), doc_id, tab or None))
 
 
-def cmd_insert_table_row(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
+@update_app.command("append", help="Append text to the end of the tab.")
+def update_append(ctx: typer.Context, text: str = typer.Argument(..., help="Text to append.")) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    print(append(_service(ctx), doc_id, text, tab))
+
+
+@update_app.command("replace", help=_REPLACE_HELP)
+def update_replace(
+    ctx: typer.Context,
+    old: str = typer.Argument(..., help="Text or regex pattern to find."),
+    new: str = typer.Argument(..., help="Replacement (backrefs with -E)."),
+    regex: bool = typer.Option(False, "-E", "--regex", help="Treat 'old' as a Python regex."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = (ctx.parent.obj.get("tab") or "") if ctx.parent and ctx.parent.obj else ""
+    print(replace(_service(ctx), doc_id, old, new, regex=regex, tab=tab))
+
+
+@update_app.command("insert", help=_INSERT_HELP)
+def update_insert(
+    ctx: typer.Context,
+    index: int = typer.Argument(..., help="Character index (inclusive) from `get`."),
+    text: str = typer.Argument(..., help="Text to insert."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    print(insert(_service(ctx), doc_id, index, text, tab))
+
+
+@update_app.command("delete", help=_DELETE_RANGE_HELP)
+def update_delete(
+    ctx: typer.Context,
+    start_index: int = typer.Argument(..., help="Start index (inclusive)."),
+    end_index: int = typer.Argument(..., help="End index (exclusive)."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    print(delete(_service(ctx), doc_id, start_index, end_index, tab))
+
+
+@update_app.command("link", help=_LINK_HELP)
+def update_link(
+    ctx: typer.Context,
+    start_index: int = typer.Argument(..., help="Start index (inclusive)."),
+    end_index: int = typer.Argument(..., help="End index (exclusive)."),
+    url: str | None = typer.Argument(None, help="URL (omit to remove link)."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    print(link(_service(ctx), doc_id, start_index, end_index, url, tab))
+
+
+@update_app.command("insert-table-row", help=_INSERT_ROW_HELP)
+def update_insert_table_row(
+    ctx: typer.Context,
+    table_index: int = typer.Argument(..., help="Index from <|TABLE|> line in `get`."),
+    row: int = typer.Argument(..., help="Row index (0-based) to insert next to."),
+    above: bool = typer.Option(False, "--above", help="Insert above this row instead of below."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    below = not above
     print(
         insert_table_row(
-            service,
-            args.doc_id,
-            args.table_index,
-            args.row,
-            below=args.below,
-            tab=getattr(args, "tab", None),
+            _service(ctx),
+            doc_id,
+            table_index,
+            row,
+            below=below,
+            tab=tab,
         )
     )
 
 
-def cmd_delete_table_row(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(
-        delete_table_row(
-            service,
-            args.doc_id,
-            args.table_index,
-            args.row,
-            getattr(args, "tab", None),
-        )
-    )
+@update_app.command("delete-table-row", help=_DELETE_ROW_HELP)
+def update_delete_table_row(
+    ctx: typer.Context,
+    table_index: int = typer.Argument(..., help="Index from <|TABLE|> line in `get`."),
+    row: int = typer.Argument(..., help="Row index (0-based) to delete."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    tab = ctx.parent.obj["tab"] if ctx.parent and ctx.parent.obj else None
+    print(delete_table_row(_service(ctx), doc_id, table_index, row, tab))
 
 
-def cmd_delete_tab(args: argparse.Namespace) -> None:
-    service = get_service(allow_browser_flow=True)
-    print(delete_tab(service, args.doc_id, args.tab))
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Google Docs CLI")
-    parser.add_argument(
-        "--doc-id",
-        required=True,
-        help="Google Docs document ID (raw ID only, not a URL)",
-    )
-    subparsers = parser.add_subparsers(dest="command", required=True)
-
-    subparsers.add_parser("tabs", help="List all document tabs")
-
-    get_parser = subparsers.add_parser("get", help="Fetch and display a tab")
-    get_parser.add_argument("--tab", help="Tab title or ID (default: first tab)")
-
-    update_parser = subparsers.add_parser("update", help="Edit the document")
-    update_parser.add_argument("--tab", help="Tab title or ID (default: first tab)")
-    update_sub = update_parser.add_subparsers(dest="action", required=True)
-
-    append_p = update_sub.add_parser("append", help="Append text to end of tab")
-    append_p.add_argument("text", help="Text to append")
-
-    replace_p = update_sub.add_parser("replace", help="Find and replace text")
-    replace_p.add_argument("old", help="Text to find (literal or regex pattern)")
-    replace_p.add_argument("new", help="Replacement text (supports \\1, \\2 backrefs with -E)")
-    replace_p.add_argument("-E", "--regex", action="store_true", help="Treat 'old' as a regex pattern")
-
-    insert_p = update_sub.add_parser("insert", help="Insert text at index")
-    insert_p.add_argument("index", type=int, help="Character index to insert at")
-    insert_p.add_argument("text", help="Text to insert")
-
-    delete_p = update_sub.add_parser("delete", help="Delete a range of text")
-    delete_p.add_argument("start_index", type=int, help="Start index (inclusive)")
-    delete_p.add_argument("end_index", type=int, help="End index (exclusive)")
-
-    link_p = update_sub.add_parser("link", help="Add or remove a hyperlink on a text range")
-    link_p.add_argument("start_index", type=int, help="Start index (inclusive)")
-    link_p.add_argument("end_index", type=int, help="End index (exclusive)")
-    link_p.add_argument("url", nargs="?", default=None, help="URL to link to (omit to remove link)")
-
-    insert_row_p = update_sub.add_parser("insert-table-row", help="Insert a row into a table")
-    insert_row_p.add_argument("table_index", type=int, help="Start index of the table element")
-    insert_row_p.add_argument("row", type=int, help="Row index (0-based) to insert relative to")
-    insert_row_p.add_argument("--below", action="store_true", default=True, help="Insert below (default)")
-    insert_row_p.add_argument("--above", action="store_true", dest="above", help="Insert above instead")
-
-    delete_row_p = update_sub.add_parser("delete-table-row", help="Delete a row from a table")
-    delete_row_p.add_argument("table_index", type=int, help="Start index of the table element")
-    delete_row_p.add_argument("row", type=int, help="Row index (0-based) to delete")
-
-    delete_tab_parser = subparsers.add_parser("delete-tab", help="Delete a tab")
-    delete_tab_parser.add_argument("tab", help="Tab title or ID to delete")
-
-    return parser
+@app.command("delete-tab", help=_DELETE_TAB_HELP)
+def cmd_delete_tab(
+    ctx: typer.Context,
+    tab: str = typer.Argument(..., help="Tab title or t.* ID."),
+) -> None:
+    doc_id = _root_obj(ctx)["doc_id"]
+    print(delete_tab(_service(ctx), doc_id, tab))
 
 
 def main() -> None:
-    parser = build_parser()
-    args = parser.parse_args()
-
     try:
-        if args.command == "tabs":
-            cmd_tabs(args)
-        elif args.command == "get":
-            cmd_get(args)
-        elif args.command == "delete-tab":
-            cmd_delete_tab(args)
-        elif args.command == "update":
-            if args.action == "insert-table-row":
-                if getattr(args, "above", False):
-                    args.below = False
-                cmd_insert_table_row(args)
-            elif args.action == "delete-table-row":
-                cmd_delete_table_row(args)
-            else:
-                {
-                    "append": cmd_append,
-                    "replace": cmd_replace,
-                    "insert": cmd_insert,
-                    "delete": cmd_delete,
-                    "link": cmd_link,
-                }[args.action](args)
+        app()
     except HttpError as err:
-        print(f"API error: {err}", file=sys.stderr)
-        sys.exit(1)
-    except ValueError as err:
-        print(err, file=sys.stderr)
-        sys.exit(1)
+        typer.echo(f"API error: {err}", err=True)
+        raise typer.Exit(1) from None
+    except (ValueError, RuntimeError, OSError) as err:
+        typer.echo(str(err), err=True)
+        raise typer.Exit(1) from None
 
 
 if __name__ == "__main__":

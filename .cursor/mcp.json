@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "docs-mcp": {
+      "command": "uv",
+      "args": ["run", "python", "mcp/docs-mcp.py"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

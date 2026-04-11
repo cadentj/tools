@@ -30,7 +30,7 @@ Differences from `github/github-mcp-server` [[link](https://github.com/github/gi
 
 `docs-mcp`
 
-Contains basic commands for editing Google Docs.
+Contains basic commands for editing Google Docs. For the terminal CLI, see `docs/docs.md` — invoke `docs` (console script from `pyproject.toml`), not `uv run python cli/docs.py`.
 
 TODO(cadentj): List some differences.
 

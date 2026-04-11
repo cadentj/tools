@@ -6,12 +6,15 @@ description: Pull a Google Doc's state and edit it.
 I use Google Docs to keep a lot of running notes about my life.
 
 **Note**: For questions about the Google Docs API, use the deepwiki MCP on the `googleapis/google-api-python-client` repo.
+
+**CLI invocation**: Run the `docs` command (console script from this repo’s `pyproject.toml`). After `uv sync`, put `.venv/bin` on your `PATH` or use a shell alias; do not call `uv run python cli/docs.py`. With Google credentials in 1Password, use `op run --env-file .env -- docs …` so `GOOGLE_DOCS_*` env vars are injected.
+
 **CLI input contract**: Pass `--doc-id <DOC_ID>` on every command. The CLI expects a raw Google Docs document ID (agents can extract it from a docs URL before calling).
 
 ## Listing tabs
 
 ```bash
-uv run python cli/docs.py --doc-id "<DOC_ID>" tabs
+docs --doc-id "<DOC_ID>" tabs
 ```
 
 Shows all tabs with their titles and IDs, including nested tabs.
@@ -19,8 +22,8 @@ Shows all tabs with their titles and IDs, including nested tabs.
 ## Deleting a tab
 
 ```bash
-uv run python cli/docs.py --doc-id "<DOC_ID>" delete-tab "Tab Name"    # by title
-uv run python cli/docs.py --doc-id "<DOC_ID>" delete-tab "t.abc123"    # by ID
+docs --doc-id "<DOC_ID>" delete-tab "Tab Name"    # by title
+docs --doc-id "<DOC_ID>" delete-tab "t.abc123"    # by ID
 ```
 
 Deletes a tab and all its child tabs.
@@ -28,9 +31,9 @@ Deletes a tab and all its child tabs.
 ## Reading a tab
 
 ```bash
-uv run python cli/docs.py --doc-id "<DOC_ID>" get                    # first tab
-uv run python cli/docs.py --doc-id "<DOC_ID>" get --tab "Food"       # by title
-uv run python cli/docs.py --doc-id "<DOC_ID>" get --tab "t.abc123"   # by ID
+docs --doc-id "<DOC_ID>" get                    # first tab
+docs --doc-id "<DOC_ID>" get --tab "Food"       # by title
+docs --doc-id "<DOC_ID>" get --tab "t.abc123"   # by ID
 ```
 
 Output is a compact indexed format. Each line starts with `[N]` where N is the character index.
@@ -65,7 +68,7 @@ All update commands accept `--tab` to target a specific tab (default: first tab)
 | `update insert-table-row <table_index> <row> --above` | Insert row above row N |
 | `update delete-table-row <table_index> <row>` | Delete row N from table at index |
 
-All commands accept `--tab` (e.g. `uv run python cli/docs.py --doc-id "<DOC_ID>" update --tab "Food" append "text"`). Without `--tab`, `replace` operates on **all tabs**; other commands default to the first tab.
+All commands accept `--tab` (e.g. `docs --doc-id "<DOC_ID>" update --tab "Food" append "text"`). Without `--tab`, `replace` operates on **all tabs**; other commands default to the first tab.
 
 **Note**: `insert`/`delete` work inside table cells too — use the character index shown in `get` output. The `table_index` for table row commands is the index shown on the `<|TABLE|>` line.
 

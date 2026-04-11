@@ -1,10 +1,12 @@
 """Google Docs API core: auth, formatting, and document operations.
 
-Used by cli/docs.py (local OAuth) and mcp/docs-mcp.py (token-only).
+Used by cli/docs and mcp/docs-mcp. Configuration: see
+``.env.template`` at the repo root.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from typing import Any
@@ -19,68 +21,39 @@ SCOPES = [
     "https://www.googleapis.com/auth/tasks",
 ]
 
-
-def token_path() -> str:
-    return os.environ.get("GOOGLE_DOCS_TOKEN_PATH", "token.json")
-
-
-def credentials_path() -> str:
-    return os.environ.get("GOOGLE_DOCS_CREDENTIALS_PATH", "credentials.json")
-
-
-def auth_guidance() -> str:
-    tp = token_path()
-    cp = credentials_path()
-    return (
-        "copy valid OAuth files into the sprite and re-run: "
-        f"token='{tp}', credentials='{cp}'. "
-        "Generate token.json by running cli/docs.py locally once and completing login."
-    )
-
-
-def get_service(allow_browser_flow: bool = False) -> Any:
+def get_service() -> Any:
     """Build the Google Docs API service.
 
-    When allow_browser_flow is True (CLI), missing/invalid tokens may open a browser
-    for OAuth. When False (MCP/headless), a valid token file is required.
+    Opens a browser for OAuth when the token is missing, invalid, or not refreshable.
     """
-    tp = token_path()
-    cp = credentials_path()
+    token_json_raw = os.environ.get("GOOGLE_DOCS_TOKEN_JSON")
+    credentials_json_raw = os.environ.get("GOOGLE_DOCS_CREDENTIALS_JSON")
 
-    if not allow_browser_flow:
-        if not os.path.exists(tp):
-            raise RuntimeError(f"missing token file '{tp}'; {auth_guidance()}")
+    if not token_json_raw or not token_json_raw.strip():
+        raise RuntimeError(
+            "GOOGLE_DOCS_TOKEN_JSON is missing or empty; set it in the environment."
+        )
+    if not credentials_json_raw or not credentials_json_raw.strip():
+        raise RuntimeError(
+            "GOOGLE_DOCS_CREDENTIALS_JSON is missing or empty; set it in the environment."
+        )
 
-        try:
-            creds = Credentials.from_authorized_user_file(tp, SCOPES)
-        except Exception as err:
-            raise RuntimeError(f"could not parse token file '{tp}': {err}") from err
+    try:
+        token_json = json.loads(token_json_raw)
+        credentials_json = json.loads(credentials_json_raw)
+    except json.JSONDecodeError as err:
+        raise RuntimeError(f"invalid JSON in token or credentials env: {err}") from err
 
-        if not creds.valid:
-            if creds.expired and creds.refresh_token:
-                try:
-                    creds.refresh(Request())
-                except Exception as err:
-                    raise RuntimeError(f"token refresh failed: {err}; {auth_guidance()}") from err
-                with open(tp, "w", encoding="utf-8") as token_file:
-                    token_file.write(creds.to_json())
-            else:
-                raise RuntimeError(f"token is invalid and not refreshable; {auth_guidance()}")
+    creds = Credentials.from_authorized_user_info(token_json, SCOPES)
 
+    if not creds.valid and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+    if creds.valid:
         return build("docs", "v1", credentials=creds)
 
-    # CLI: allow browser OAuth when needed
-    creds = None
-    if os.path.exists(tp):
-        creds = Credentials.from_authorized_user_file(tp, SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(cp, SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(tp, "w", encoding="utf-8") as token:
-            token.write(creds.to_json())
+    flow = InstalledAppFlow.from_client_config(credentials_json, SCOPES)
+    creds = flow.run_local_server(port=0)
     return build("docs", "v1", credentials=creds)
 
 
