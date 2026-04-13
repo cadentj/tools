@@ -1,0 +1,14 @@
+model:
+  default: "gpt-5.3-codex"
+  provider: "openai-codex"
+
+terminal:
+  backend: "local"
+  cwd: "."
+  timeout: 180
+  docker_mount_cwd_to_workspace: false
+  lifetime_seconds: 300
+  container_cpu: 1
+  container_memory: 1024
+  container_disk: 8192
+  container_persistent: true

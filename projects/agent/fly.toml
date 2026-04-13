@@ -1,0 +1,36 @@
+app = "cc-bot"
+primary_region = "ewr"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  HOME = "/data/home"
+  HERMES_HOME = "/data/home/.hermes"
+  CODEX_HOME = "/data/home/.codex"
+  TELEGRAM_WEBHOOK_PORT = "8443"
+
+[[mounts]]
+  source = "agent_data"
+  destination = "/data"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8443
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "10s"
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "1gb"
