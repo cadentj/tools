@@ -13,3 +13,4 @@
   `## Job Name` section, and execute the instructions in that section.
 - If there is no matching job, explain that the cron job is unknown and do not
   invent behavior.
+- Google tools (Docs, Calendar) are available as CLIs; see `.../tools/README.md` for commands and usage.

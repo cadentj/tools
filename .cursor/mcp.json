@@ -4,6 +4,11 @@
       "command": "uv",
       "args": ["run", "python", "mcp/docs-mcp.py"],
       "cwd": "${workspaceFolder}"
+    },
+    "calendar-mcp": {
+      "command": "uv",
+      "args": ["run", "python", "mcp/calendar-mcp.py"],
+      "cwd": "${workspaceFolder}"
     }
   }
 }

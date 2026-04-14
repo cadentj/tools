@@ -1,4 +1,4 @@
-"""Google Docs API core: auth, formatting, and document operations.
+"""Google Docs API core: formatting and document operations.
 
 Used by cli/docs and mcp/docs-mcp. Configuration: see
 ``.env.template`` at the repo root.
@@ -6,55 +6,17 @@ Used by cli/docs and mcp/docs-mcp. Configuration: see
 
 from __future__ import annotations
 
-import json
-import os
 import re
 from typing import Any
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-SCOPES = [
-    "https://www.googleapis.com/auth/documents",
-    "https://www.googleapis.com/auth/tasks",
-]
+from tools.google_auth import get_credentials
+
 
 def get_service() -> Any:
-    """Build the Google Docs API service.
-
-    Opens a browser for OAuth when the token is missing, invalid, or not refreshable.
-    """
-    token_json_raw = os.environ.get("GOOGLE_DOCS_TOKEN_JSON")
-    credentials_json_raw = os.environ.get("GOOGLE_DOCS_CREDENTIALS_JSON")
-
-    if not token_json_raw or not token_json_raw.strip():
-        raise RuntimeError(
-            "GOOGLE_DOCS_TOKEN_JSON is missing or empty; set it in the environment."
-        )
-    if not credentials_json_raw or not credentials_json_raw.strip():
-        raise RuntimeError(
-            "GOOGLE_DOCS_CREDENTIALS_JSON is missing or empty; set it in the environment."
-        )
-
-    try:
-        token_json = json.loads(token_json_raw)
-        credentials_json = json.loads(credentials_json_raw)
-    except json.JSONDecodeError as err:
-        raise RuntimeError(f"invalid JSON in token or credentials env: {err}") from err
-
-    creds = Credentials.from_authorized_user_info(token_json, SCOPES)
-
-    if not creds.valid and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-
-    if creds.valid:
-        return build("docs", "v1", credentials=creds)
-
-    flow = InstalledAppFlow.from_client_config(credentials_json, SCOPES)
-    creds = flow.run_local_server(port=0)
-    return build("docs", "v1", credentials=creds)
+    """Build the Google Docs API service."""
+    return build("docs", "v1", credentials=get_credentials())
 
 
 def get_doc(service: Any, doc_id: str) -> dict[str, Any]:

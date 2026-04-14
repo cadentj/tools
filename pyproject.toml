@@ -18,6 +18,7 @@ dependencies = [
 [project.scripts]
 cf-cron = "cli.cf_cron:main"
 docs = "cli.docs:main"
+calendar = "cli.calendar:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tools", "cli"]

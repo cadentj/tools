@@ -42,11 +42,31 @@ TODO(cadentj): List some differences.
 
 Google Docs editor CLI exposed from `cli/docs.py`.
 
+`calendar`
+
+Google Calendar read-only CLI exposed from `cli/calendar.py`.
+
+- `calendar calendars` — list all accessible calendars and their IDs
+- `calendar events [-c CALENDAR_ID] [--from ISO] [--to ISO] [-n MAX]` — list upcoming events
+- `calendar event EVENT_ID [-c CALENDAR_ID]` — full detail for a single event
+
+Run with: `op run --env-file=.env -- calendar ...`
+
 `cf-cron`
 
 Manages a shared Cloudflare Worker that wakes a Hermes Telegram gateway with
 synthetic `⏰ Job Name` messages. The job registry lives in `jobs.md`; for the
 Fly/Hermes deployment template, see `projects/agent/`.
+
+## Development
+
+- Python: use `uv` for environments and running scripts.
+- Node: use `pnpm` for package management.
+
+Preact:
+- `onChange` maps to the native `change` event (fires on blur), NOT every keystroke like React. Use `onInput` for text/number inputs that need per-keystroke updates. `onChange` is fine for `<select>`.
+- Use `e.currentTarget` instead of `e.target` for typed event access.
+- Use `spellcheck` (lowercase) not `spellCheck`.
 
 # Fun! 
 
