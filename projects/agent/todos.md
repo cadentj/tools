@@ -25,7 +25,24 @@
     TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" \
     TELEGRAM_ALLOWED_USERS="$TELEGRAM_ALLOWED_USERS" \
     TELEGRAM_WEBHOOK_URL="$TELEGRAM_WEBHOOK_URL" \
-    TELEGRAM_WEBHOOK_SECRET="$TELEGRAM_WEBHOOK_SECRET"
+    TELEGRAM_WEBHOOK_SECRET="$TELEGRAM_WEBHOOK_SECRET" \
+    CLOUDFLARE_ACCOUNT_ID="$CLOUDFLARE_ACCOUNT_ID" \
+    CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" \
+    CLOUDFLARE_WORKER_NAME="$CLOUDFLARE_WORKER_NAME" \
+    HERMES_CRON_JOBS_FILE="$HERMES_CRON_JOBS_FILE" \
+    HERMES_CRON_TRIGGER_USER_ID="$HERMES_CRON_TRIGGER_USER_ID"
+  ```
+- Initialize the cron jobs file inside the machine:
+  ```bash
+  uv run cf-cron init
+  ```
+- Validate the cron file before syncing:
+  ```bash
+  uv run cf-cron validate
+  ```
+- Sync Cloudflare schedules and the Worker:
+  ```bash
+  uv run cf-cron sync
   ```
 - Deploy once:
   ```bash
@@ -59,5 +76,9 @@
 - Check Telegram's webhook:
   ```bash
   curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getWebhookInfo"
+  ```
+- Trigger one cron job manually:
+  ```bash
+  uv run cf-cron trigger morning-check-in
   ```
 - Send a Telegram message from an allowed user and confirm Hermes replies.

@@ -23,6 +23,8 @@ WORKDIR /app
 
 COPY --chmod=0755 entrypoint.sh /app/entrypoint.sh
 COPY hermes-config.yaml /app/hermes-config.yaml
+COPY AGENTS.template.md /app/AGENTS.template.md
+COPY jobs.template.md /app/jobs.template.md
 
 EXPOSE 8443
 

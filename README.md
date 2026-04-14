@@ -36,6 +36,18 @@ TODO(cadentj): List some differences.
 
 *Main difference is that, Google's default cli and api tools suck. They only give you append at the bottom of a doc options, in a TERRIBLE rich text format. If you don't know what that's like, check out Lexical [[link](https://playground.lexical.dev/)]. This is verbose and hard to make concise edits to.*
 
+## Available CLIs
+
+`docs`
+
+Google Docs editor CLI exposed from `cli/docs.py`.
+
+`cf-cron`
+
+Manages a shared Cloudflare Worker that wakes a Hermes Telegram gateway with
+synthetic `⏰ Job Name` messages. The job registry lives in `jobs.md`; for the
+Fly/Hermes deployment template, see `projects/agent/`.
+
 # Fun! 
 
 ## projects/arc-search
