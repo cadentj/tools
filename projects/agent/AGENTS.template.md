@@ -1,6 +1,7 @@
 # Agent Runtime Notes
 
 - The persistent working directory is `/data/home`.
+- Keep persistent git clones under `/data/home/repos`, not `/app`.
 - Cron jobs are defined in `/data/home/jobs.md`.
 - For repo-local CLIs installed into `.venv`, prefer creating shell aliases or
   running them through `uv run` so you do not need to remember to activate the

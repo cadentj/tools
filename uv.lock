@@ -894,6 +894,8 @@ dependencies = [
     { name = "google-auth-httplib2" },
     { name = "google-auth-oauthlib" },
     { name = "mcp" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
     { name = "typer" },
 ]
 
@@ -903,6 +905,8 @@ requires-dist = [
     { name = "google-auth-httplib2", specifier = ">=0.3.0" },
     { name = "google-auth-oauthlib", specifier = ">=1.2.4" },
     { name = "mcp", specifier = ">=1.27.0" },
+    { name = "pydantic", specifier = ">=2.0" },
+    { name = "pydantic-settings", specifier = ">=2.0" },
     { name = "typer", specifier = ">=0.12.0" },
 ]
 

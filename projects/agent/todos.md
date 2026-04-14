@@ -30,7 +30,12 @@
     CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" \
     CLOUDFLARE_WORKER_NAME="$CLOUDFLARE_WORKER_NAME" \
     HERMES_CRON_JOBS_FILE="$HERMES_CRON_JOBS_FILE" \
-    HERMES_CRON_TRIGGER_USER_ID="$HERMES_CRON_TRIGGER_USER_ID"
+    HERMES_CRON_TRIGGER_USER_ID="$HERMES_CRON_TRIGGER_USER_ID" \
+    GH_TOKEN="$GH_TOKEN"
+  ```
+- Clone the persistent repos onto the Fly volume:
+  ```bash
+  /app/init.sh
   ```
 - Initialize the cron jobs file inside the machine:
   ```bash
