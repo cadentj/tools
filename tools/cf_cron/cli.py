@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Cloudflare cron management CLI for Hermes."""
 
 from __future__ import annotations
@@ -8,7 +7,7 @@ from pathlib import Path
 
 import typer
 
-from tools.cf_cron import (
+from tools.cf_cron.api import (
     CloudflareClient,
     CloudflareConfig,
     CronConfigError,
@@ -19,14 +18,16 @@ from tools.cf_cron import (
     sync_worker,
     trigger_job,
 )
-
-app = typer.Typer(
-    help=(
-        "Manage a shared Cloudflare Worker that triggers Hermes cron jobs via a "
-        "synthetic Telegram webhook update."
-    ),
-    no_args_is_help=True,
+from tools.cf_cron.help import (
+    APP_HELP,
+    INIT_HELP,
+    LIST_HELP,
+    SYNC_HELP,
+    TRIGGER_HELP,
+    VALIDATE_HELP,
 )
+
+app = typer.Typer(help=APP_HELP, no_args_is_help=True)
 
 
 def _load_all() -> tuple[Path, CloudflareConfig, HermesTriggerConfig]:
@@ -34,7 +35,7 @@ def _load_all() -> tuple[Path, CloudflareConfig, HermesTriggerConfig]:
     return jobs_path, cloudflare, hermes
 
 
-@app.command("init")
+@app.command("init", help=INIT_HELP)
 def cmd_init(force: bool = typer.Option(False, "--force", help="Overwrite an existing jobs file.")) -> None:
     jobs_path, _, _ = _load_all()
     if jobs_path.exists() and not force:
@@ -44,14 +45,14 @@ def cmd_init(force: bool = typer.Option(False, "--force", help="Overwrite an exi
     typer.echo(f"Initialized {jobs_path}")
 
 
-@app.command("validate")
+@app.command("validate", help=VALIDATE_HELP)
 def cmd_validate() -> None:
     jobs_path, _, _ = _load_all()
     jobs = load_jobs(jobs_path)
     typer.echo(f"{jobs_path}: {len(jobs)} valid job(s)")
 
 
-@app.command("list")
+@app.command("list", help=LIST_HELP)
 def cmd_list(remote: bool = typer.Option(False, "--remote", help="Also show remote Cloudflare schedules.")) -> None:
     jobs_path, cloudflare, _ = _load_all()
     jobs = load_jobs(jobs_path)
@@ -73,7 +74,7 @@ def cmd_list(remote: bool = typer.Option(False, "--remote", help="Also show remo
         typer.echo(f"- {schedule['cron']}: {summary}")
 
 
-@app.command("sync")
+@app.command("sync", help=SYNC_HELP)
 def cmd_sync() -> None:
     jobs_path, cloudflare, hermes = _load_all()
     jobs = load_jobs(jobs_path)
@@ -85,7 +86,7 @@ def cmd_sync() -> None:
     )
 
 
-@app.command("trigger")
+@app.command("trigger", help=TRIGGER_HELP)
 def cmd_trigger(job_name_or_slug: str = typer.Argument(..., help="Job slug or exact job name.")) -> None:
     jobs_path, _, hermes = _load_all()
     jobs = load_jobs(jobs_path)

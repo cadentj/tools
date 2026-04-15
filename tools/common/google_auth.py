@@ -61,7 +61,7 @@ def get_credentials() -> Credentials:
     }
     flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
     creds = flow.run_local_server(port=0)
-    token_path = os.path.join(os.path.dirname(__file__), "..", "token.json")
+    token_path = os.path.join(os.path.dirname(__file__), "..", "..", "token.json")
     with open(token_path, "w") as f:
         f.write(creds.refresh_token)
     print("New refresh token saved to token.json — update GOOGLE_REFRESH_TOKEN in 1Password.")

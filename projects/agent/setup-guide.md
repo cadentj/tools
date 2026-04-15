@@ -1,5 +1,3 @@
-# TODOs
-
 - Copy the template and fill in your values:
   ```bash
   cp .env.template .env

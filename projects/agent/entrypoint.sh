@@ -3,30 +3,19 @@ set -euo pipefail
 
 umask 077
 
-script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-
-: "${HOME:=/data/home}"
-: "${HERMES_HOME:=${HOME}/.hermes}"
-: "${CODEX_HOME:=${HOME}/.codex}"
-: "${HERMES_CRON_JOBS_FILE:=${HOME}/jobs.md}"
-
-export HOME
-export HERMES_HOME
-export CODEX_HOME
-export HERMES_CRON_JOBS_FILE
+script_dir="/app"
 
 mkdir -p "$HOME" "$HERMES_HOME" "$CODEX_HOME"
 
-if [[ ! -f "$HERMES_HOME/config.yaml" ]]; then
+# Always refresh bashrc from the image (aliases may change between deploys)
+cp "$script_dir/bashrc" "$HOME/.bashrc"
+
+# Copy hermes-config.yaml to .hermes/config.yaml if it doesn't exist
+# else, delete hermes-config.yaml
+if [[ -f "$HERMES_HOME/config.yaml" ]]; then
+  rm -f "$script_dir/hermes-config.yaml"
+else
   cp "$script_dir/hermes-config.yaml" "$HERMES_HOME/config.yaml"
-fi
-
-if [[ ! -f "$HOME/AGENTS.md" ]]; then
-  cp "$script_dir/AGENTS.template.md" "$HOME/AGENTS.md"
-fi
-
-if [[ ! -f "$HERMES_CRON_JOBS_FILE" ]]; then
-  cp "$script_dir/jobs.template.md" "$HERMES_CRON_JOBS_FILE"
 fi
 
 required_env=(
@@ -34,6 +23,7 @@ required_env=(
   TELEGRAM_ALLOWED_USERS
   TELEGRAM_WEBHOOK_URL
   TELEGRAM_WEBHOOK_SECRET
+  GH_TOKEN
 )
 
 for name in "${required_env[@]}"; do
@@ -42,5 +32,17 @@ for name in "${required_env[@]}"; do
     exit 1
   fi
 done
+
+### (2) Clone repos ###
+repos_dir="${HOME}/repos"
+mkdir -p "${repos_dir}"
+
+git config --global user.name "cc-bot"
+git config --global user.email "caden.juang+cc-bot@gmail.com"
+
+git clone "https://${GH_TOKEN}@github.com/cadentj/sinnoh.git" "${repos_dir}/sinnoh"
+git clone "https://${GH_TOKEN}@github.com/cadentj/tools.git" "${repos_dir}/tools"
+
+echo "Repos ready under ${repos_dir}"
 
 exec hermes gateway

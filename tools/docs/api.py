@@ -1,8 +1,4 @@
-"""Google Docs API core: formatting and document operations.
-
-Used by cli/docs and mcp/docs-mcp. Configuration: see
-``.env.template`` at the repo root.
-"""
+"""Google Docs API core: formatting and document operations."""
 
 from __future__ import annotations
 
@@ -11,7 +7,7 @@ from typing import Any
 
 from googleapiclient.discovery import build
 
-from tools.google_auth import get_credentials
+from tools.common.google_auth import get_credentials
 
 
 def get_service() -> Any:
