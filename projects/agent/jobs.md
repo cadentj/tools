@@ -10,20 +10,20 @@ this file, find the matching heading, and carry out the instructions in that sec
 
 Run `git pull` in `/data/repos/tools` and `/data/repos/sinnoh` to get the latest task lists.
 Run `calendar events --from $(date -u +%Y-%m-%dT00:00:00Z) --to $(date -u +%Y-%m-%dT23:59:59Z)` to get today's calendar events.
-Ping Caden with a short, warm greeting summarizing the day's schedule and the top priority todo items (priority >= 6).
+Ping Caden with a short, warm greeting summarizing the day's schedule and the top priority todo items (priority <= 6, where 1 is highest priority).
 Style constraints:
 - Keep it concise (1-3 sentences).
 - No system terminology (avoid saying "cron", "git pull", etc.).
 - Only list the events/todos if there are any.
 
-## Two-Hour Todo Check-In
+## Three-Hour Todo Check-In
 - cron: 30 13,16,19,22,1 * * *
 - enabled: true
 
-EST Schedule: 9:30 AM, 12:30 PM, 3:30 PM, 6:30 PM, 9:30 PM
+EDT Schedule: 9:30 AM, 12:30 PM, 3:30 PM, 6:30 PM, 9:30 PM
 
 Run `git pull` in `/data/repos/tools` and `/data/repos/sinnoh` to get the latest task lists.
-Check Caden's top-priority todo items (priority >= 6).
+Check Caden's top-priority todo items (priority <= 6, where 1 is highest priority).
 Briefly ping Caden to check in on progress, mentioning a relevant todo item or asking for a quick status update.
 Peek at memory if needed to ensure nudges stay relevant to the current day's plan.
 
