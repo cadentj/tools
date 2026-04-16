@@ -23,6 +23,7 @@ WORKDIR /app
 
 COPY bashrc /app/bashrc
 COPY --chmod=0755 entrypoint.sh /app/entrypoint.sh
+COPY --chmod=0755 setup.sh /app/setup.sh
 COPY hermes-config.yaml /app/hermes-config.yaml
 
 EXPOSE 8443
