@@ -7,9 +7,6 @@ APP_DIR="/app"
 HERMES_HOME="/data/.hermes"
 CODEX_HOME="/data/.codex"
 
-# Always refresh bashrc from the image (aliases may change between deploys)
-cp "$APP_DIR/bashrc" "/data/.bashrc"
-
 # Copy hermes-config.yaml to .hermes/config.yaml if it doesn't exist
 # else, delete hermes-config.yaml
 if [[ -f "$HERMES_HOME/config.yaml" ]]; then

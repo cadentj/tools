@@ -4,11 +4,6 @@
 - Docs: `/data/repos/tools/.venv/bin/docs`
 - Cron: `/data/repos/tools/.venv/bin/cf-cron`
 
-There are aliases available, written at `/data/.bashrc`. 
-- Calendar: `calendar`
-- Docs: `docs`
-- Cron: `cf-cron`
-
 ## Workflow guidance
 
 **docs**: 
