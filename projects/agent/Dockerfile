@@ -6,14 +6,17 @@ ARG HERMES_REF=d5fd74cac209b22ac731305948b4f5e52b5b47f0
 ENV PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
     PATH="/opt/venv/bin:${PATH}" \
-    HOME=/data/home \
-    HERMES_HOME=/data/home/.hermes \
-    CODEX_HOME=/data/home/.codex \
+    HERMES_HOME=/data/.hermes \
+    CODEX_HOME=/data/.codex \
     TELEGRAM_WEBHOOK_PORT=8443
 
+# Install git, ca-certificates, vim, and rsync
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git ca-certificates vim \
+    && apt-get install -y --no-install-recommends git ca-certificates vim rsync \
     && rm -rf /var/lib/apt/lists/*
+
+# Set the home dir to /data
+RUN sed -i 's|root:x:0:0:root:/root:|root:x:0:0:root:/data:|' /etc/passwd
 
 RUN uv venv /opt/venv
 RUN uv pip install --python /opt/venv/bin/python "git+${HERMES_REPO}@${HERMES_REF}#egg=hermes-agent[messaging]"

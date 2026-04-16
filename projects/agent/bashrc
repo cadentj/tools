@@ -1,4 +1,4 @@
 # Shell aliases for tools CLIs (runnable from anywhere)
-alias cf-cron='"$HOME/repos/tools/.venv/bin/cf-cron"'
-alias docs='"$HOME/repos/tools/.venv/bin/docs"'
-alias calendar='"$HOME/repos/tools/.venv/bin/calendar"'
+alias cf-cron='"/data/repos/tools/.venv/bin/cf-cron"'
+alias docs='"/data/repos/tools/.venv/bin/docs"'
+alias calendar='"/data/repos/tools/.venv/bin/calendar"'

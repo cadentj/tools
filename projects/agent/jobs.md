@@ -8,7 +8,7 @@ this file, find the matching heading, and carry out the instructions in that sec
 - cron: 30 14 * * *
 - enabled: true
 
-Run `git pull` in `$HOME/repos/tools` and `$HOME/repos/sinnoh` to get the latest task lists.
+Run `git pull` in `/data/repos/tools` and `/data/repos/sinnoh` to get the latest task lists.
 Run `calendar events --from $(date -u +%Y-%m-%dT00:00:00Z) --to $(date -u +%Y-%m-%dT23:59:59Z)` to get today's calendar events.
 Ping Caden with a short, warm greeting summarizing the day's schedule and the top priority todo items (priority >= 6).
 Style constraints:
@@ -22,7 +22,7 @@ Style constraints:
 
 EST Schedule: 9:30 AM, 12:30 PM, 3:30 PM, 6:30 PM, 9:30 PM
 
-Run `git pull` in `$HOME/repos/tools` and `$HOME/repos/sinnoh` to get the latest task lists.
+Run `git pull` in `/data/repos/tools` and `/data/repos/sinnoh` to get the latest task lists.
 Check Caden's top-priority todo items (priority >= 6).
 Briefly ping Caden to check in on progress, mentioning a relevant todo item or asking for a quick status update.
 Peek at memory if needed to ensure nudges stay relevant to the current day's plan.

@@ -5,9 +5,6 @@ primary_region = "ewr"
   dockerfile = "Dockerfile"
 
 [env]
-  HOME = "/data/home"
-  HERMES_HOME = "/data/home/.hermes"
-  CODEX_HOME = "/data/home/.codex"
   TELEGRAM_WEBHOOK_PORT = "8443"
 
 [[mounts]]

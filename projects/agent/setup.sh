@@ -3,11 +3,9 @@
 # Requires GH_TOKEN and the same HOME layout as the agent image.
 set -euo pipefail
 
+REPOS_DIR="/data/repos"
 
-rm -rf /root
-ln -s /data /root
-
-mkdir -p /data/repos
+mkdir -p "$REPOS_DIR"
 
 git config --global user.name "cc-bot"
 git config --global user.email "caden.juang+cc-bot@gmail.com"
@@ -27,7 +25,7 @@ if [[ -z "${GH_TOKEN:-}" ]]; then
   exit 1
 fi
 
-ensure_repo "https://${GH_TOKEN}@github.com/cadentj/sinnoh.git" "${repos_dir}/sinnoh"
-ensure_repo "https://${GH_TOKEN}@github.com/cadentj/tools.git" "${repos_dir}/tools"
+ensure_repo "https://${GH_TOKEN}@github.com/cadentj/sinnoh.git" "$REPOS_DIR/sinnoh"
+ensure_repo "https://${GH_TOKEN}@github.com/cadentj/tools.git" "$REPOS_DIR/tools"
 
-echo "Repos ready under ${repos_dir}"
+echo "Repos ready under $REPOS_DIR"

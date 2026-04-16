@@ -3,19 +3,19 @@ set -euo pipefail
 
 umask 077
 
-script_dir="/app"
-
-mkdir -p "$HOME" "$HERMES_HOME" "$CODEX_HOME"
+APP_DIR="/app"
+HERMES_HOME="/data/.hermes"
+CODEX_HOME="/data/.codex"
 
 # Always refresh bashrc from the image (aliases may change between deploys)
-cp "$script_dir/bashrc" "$HOME/.bashrc"
+cp "$APP_DIR/bashrc" "/data/.bashrc"
 
 # Copy hermes-config.yaml to .hermes/config.yaml if it doesn't exist
 # else, delete hermes-config.yaml
 if [[ -f "$HERMES_HOME/config.yaml" ]]; then
-  rm -f "$script_dir/hermes-config.yaml"
+  rm -f "$APP_DIR/hermes-config.yaml"
 else
-  cp "$script_dir/hermes-config.yaml" "$HERMES_HOME/config.yaml"
+  cp "$APP_DIR/hermes-config.yaml" "$HERMES_HOME/config.yaml"
 fi
 
 required_env=(

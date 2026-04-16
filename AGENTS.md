@@ -1,8 +1,10 @@
 ## Available Commands
 
-- Calendar: `$HOME/repos/tools/.venv/bin/calendar`
-- Docs: `$HOME/repos/tools/.venv/bin/docs`
-- Cron: `$HOME/repos/tools/.venv/bin/cf-cron`
+- Calendar: `/data/repos/tools/.venv/bin/calendar`
+- Docs: `/data/repos/tools/.venv/bin/docs`
+- Cron: `/data/repos/tools/.venv/bin/cf-cron`
+
+
 
 ## Workflow guidance
 
@@ -20,4 +22,4 @@ Troubleshooting:
 - On idling Fly deployments, cron runs can pile up — design prompts to summarize current state, not replay stale windows.
 
 **calendar**:
-- Run `$HOME/repos/tools/.venv/bin/calendar --help` for more information. 
+- Run `/data/repos/tools/.venv/bin/calendar --help` for more information. 

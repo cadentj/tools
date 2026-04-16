@@ -4,7 +4,7 @@ model:
 
 terminal:
   backend: "local"
-  cwd: "/data/home"
+  cwd: .
   timeout: 180
   docker_mount_cwd_to_workspace: false
   lifetime_seconds: 300
