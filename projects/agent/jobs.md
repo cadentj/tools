@@ -17,10 +17,10 @@ Style constraints:
 - Only list the events/todos if there are any.
 
 ## Two-Hour Todo Check-In
-- cron: 30 13,15,17,19,21,23,1,3 * * *
+- cron: 30 13,16,19,22,1 * * *
 - enabled: true
 
-EST Schedule: 9:30 AM, 11:30 AM, 1:30 PM, 3:30 PM, 5:30 PM, 7:30 PM, 9:30 PM, 11:30 PM
+EST Schedule: 9:30 AM, 12:30 PM, 3:30 PM, 6:30 PM, 9:30 PM
 
 Run `git pull` in `$HOME/repos/tools` and `$HOME/repos/sinnoh` to get the latest task lists.
 Check Caden's top-priority todo items (priority >= 6).

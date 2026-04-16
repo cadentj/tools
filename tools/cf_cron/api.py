@@ -15,7 +15,7 @@ import uuid
 
 
 DEFAULT_WORKER_NAME = "hermes-cron"
-DEFAULT_JOBS_PATH = Path("/data/home/jobs.md")
+DEFAULT_JOBS_PATH = Path("/data/repos/tools/projects/agent/jobs.md")
 SYNTHETIC_PREFIX = "\N{ALARM CLOCK}"
 _HEADING_RE = re.compile(r"^##\s+(?P<name>.+?)\s*$")
 _FIELD_RE = re.compile(r"^-\s*(?P<key>[A-Za-z0-9_-]+)\s*:\s*(?P<value>.+?)\s*$")

@@ -21,7 +21,7 @@ APP_HELP = textwrap.dedent(
 
     \b
     Optional env vars:
-      HERMES_CRON_JOBS_FILE     — path to jobs.md (default: /data/home/jobs.md).
+      HERMES_CRON_JOBS_FILE     — path to jobs.md (default: /data/repos/tools/projects/agent/jobs.md).
       HERMES_CRON_TRIGGER_USER_ID — Telegram user ID for cron messages
                                     (default: first ID in TELEGRAM_ALLOWED_USERS).
       CLOUDFLARE_WORKER_NAME    — worker name (default: hermes-cron).
